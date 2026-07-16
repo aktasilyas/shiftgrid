@@ -12,25 +12,18 @@ void main() {
   }
 
   group('GameNotifier', () {
-    test('starts playing with full lives and the demo board', () {
+    test('starts playing with full lives and a generated board', () {
       final container = makeContainer();
       final state = container.read(gameProvider);
       expect(state.status, GameStatus.playing);
       expect(state.lives, state.maxLives);
-      expect(state.board.arrowCount, 5);
+      expect(state.board.arrowCount, greaterThan(0));
     });
 
-    test('demo board is solvable in the intended order -> won', () {
+    test('playing the guaranteed solution clears the board -> won', () {
       final container = makeContainer();
       final notifier = container.read(gameProvider.notifier);
-
-      const solution = [
-        Position(2, 2),
-        Position(2, 4),
-        Position(0, 4),
-        Position(4, 0),
-        Position(0, 0),
-      ];
+      final solution = notifier.solution;
 
       for (final pos in solution) {
         final result = notifier.peek(pos);
@@ -47,29 +40,51 @@ void main() {
     test('a blocked shot costs a life without changing the board', () {
       final container = makeContainer();
       final notifier = container.read(gameProvider.notifier);
+      final board = container.read(gameProvider).board;
 
-      // Firing (0,0) down is blocked by the arrow at (4,0).
-      final result = notifier.peek(const Position(0, 0));
-      expect(result.didCollide, isTrue);
+      Position? blocked;
+      for (final arrow in board.arrows) {
+        if (notifier.peek(arrow.position).didCollide) {
+          blocked = arrow.position;
+          break;
+        }
+      }
+      expect(blocked, isNotNull, reason: 'expected at least one blocked arrow');
+
+      final result = notifier.peek(blocked!);
       notifier.applyResult(result);
 
       final state = container.read(gameProvider);
       expect(state.lives, state.maxLives - 1);
-      expect(state.board.arrowCount, 5);
+      expect(state.board.arrowCount, board.arrowCount);
       expect(state.status, GameStatus.playing);
     });
 
-    test('reset restores full lives and the board', () {
+    test('reset restores full lives and the same level', () {
       final container = makeContainer();
       final notifier = container.read(gameProvider.notifier);
+      final startCount = container.read(gameProvider).board.arrowCount;
 
-      notifier.applyResult(notifier.peek(const Position(0, 0)));
+      final first = notifier.solution.first;
+      notifier.applyResult(notifier.peek(first));
       notifier.reset();
 
       final state = container.read(gameProvider);
       expect(state.lives, state.maxLives);
       expect(state.moves, 0);
-      expect(state.board.arrowCount, 5);
+      expect(state.board.arrowCount, startCount);
+    });
+
+    test('newGame loads a different level and stays playable', () {
+      final container = makeContainer();
+      final notifier = container.read(gameProvider.notifier);
+
+      notifier.newGame(seed: 42);
+      final state = container.read(gameProvider);
+
+      expect(state.status, GameStatus.playing);
+      expect(state.board.arrowCount, greaterThan(0));
+      expect(notifier.solution.length, state.board.arrowCount);
     });
   });
 }

@@ -6,5 +6,6 @@
   "movesLabel": "Hamle",
   "youWon": "Tahta temizlendi!",
   "youLost": "Canın bitti",
-  "howToPlay": "Bir oku dokunarak dışarı kaydır. Hepsini temizle."
+  "howToPlay": "Bir oku dokunarak dışarı kaydır. Hepsini temizle.",
+  "newLevel": "Yeni bölüm"
 }
