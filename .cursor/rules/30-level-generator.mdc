@@ -1,0 +1,17 @@
+---
+description: Level generator rules — reverse-generation invariant, property test required.
+globs:
+  - "**/level*"
+  - "lib/features/game/domain/usecases/**"
+---
+
+# Seviye üreteci
+
+- **Ters-üretim (reverse generation) zorunlu.** Boş tahtadan başla; her adımda o anki
+  tahtaya göre **kenara açık atışı olan** bir (hücre, yön) seç ve ok koy.
+  Yerleştirme sırasının tersi = garanti çözüm. **Solver yazma.**
+- Monotonluk: ok kaldırmak yolu yalnızca açar, asla kapatmaz. Bu invariantı bozma.
+- Üreteç **deterministik**: dışarıdan `seed` alır, aynı seed → aynı tahta.
+- **Property test şart:** `test/features/game/level_generator_property_test.dart`,
+  1000 seed → üret → çözüm sırasını oyna → tahta tamamen temizlenmeli.
+- Bu test kırmızıysa **hiçbir şey merge edilmez.**

@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    name: analyze · test · domain-purity
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 3.38.5
+          channel: stable
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Generate localizations
+        run: flutter gen-l10n
+
+      - name: Domain purity (no package:flutter in domain)
+        run: |
+          echo "Checking that domain layer stays pure Dart..."
+          if grep -rEn "package:flutter" lib/features/*/domain 2>/dev/null; then
+            echo "::error::Domain layer must not import package:flutter."
+            exit 1
+          fi
+          echo "OK — domain is pure Dart."
+
+      - name: Analyze
+        run: flutter analyze
+
+      - name: Test
+        run: flutter test

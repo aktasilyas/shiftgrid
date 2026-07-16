@@ -1,0 +1,11 @@
+{
+  "@@locale": "en",
+  "appTitle": "ShiftGrid",
+  "@appTitle": {
+    "description": "The application title shown on the home screen."
+  },
+  "play": "Play",
+  "@play": {
+    "description": "Play button label."
+  }
+}
