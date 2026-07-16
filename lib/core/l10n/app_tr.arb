@@ -7,5 +7,29 @@
   "youWon": "Tahta temizlendi!",
   "youLost": "Canın bitti",
   "howToPlay": "Bir oku dokunarak dışarı kaydır. Hepsini temizle.",
-  "newLevel": "Yeni bölüm"
+  "newLevel": "Yeni bölüm",
+  "settings": "Ayarlar",
+  "soundLabel": "Ses ve titreşim",
+  "languageLabel": "Dil",
+  "systemLanguage": "Sistem",
+  "chooseDifficulty": "Zorluk seç",
+  "difficultyEasy": "Kolay",
+  "difficultyMedium": "Orta",
+  "difficultyHard": "Zor",
+  "undo": "Geri al",
+  "hint": "İpucu",
+  "nextLevel": "Sıradaki",
+  "lockedLabel": "Kilitli",
+  "levelLabel": "Bölüm {number}",
+  "@levelLabel": {
+    "placeholders": {
+      "number": { "type": "int" }
+    }
+  },
+  "bestMovesLabel": "En iyi: {moves}",
+  "@bestMovesLabel": {
+    "placeholders": {
+      "moves": { "type": "int" }
+    }
+  }
 }

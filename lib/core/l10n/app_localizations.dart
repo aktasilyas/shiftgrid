@@ -98,53 +98,137 @@ abstract class AppLocalizations {
     Locale('tr'),
   ];
 
-  /// The application title shown on the home screen.
+  /// The application title.
   ///
   /// In en, this message translates to:
   /// **'ShiftGrid'**
   String get appTitle;
 
-  /// Play button label.
+  /// No description provided for @play.
   ///
   /// In en, this message translates to:
   /// **'Play'**
   String get play;
 
-  /// Restart the current board.
+  /// No description provided for @restart.
   ///
   /// In en, this message translates to:
   /// **'Restart'**
   String get restart;
 
-  /// Label for the move counter.
+  /// No description provided for @movesLabel.
   ///
   /// In en, this message translates to:
   /// **'Moves'**
   String get movesLabel;
 
-  /// Shown when all arrows are removed.
+  /// No description provided for @youWon.
   ///
   /// In en, this message translates to:
   /// **'Board cleared!'**
   String get youWon;
 
-  /// Shown when the player runs out of lives.
+  /// No description provided for @youLost.
   ///
   /// In en, this message translates to:
   /// **'Out of lives'**
   String get youLost;
 
-  /// Short gameplay hint on the game screen.
+  /// No description provided for @howToPlay.
   ///
   /// In en, this message translates to:
   /// **'Tap an arrow to slide it out. Clear them all.'**
   String get howToPlay;
 
-  /// Loads a freshly generated level.
+  /// No description provided for @newLevel.
   ///
   /// In en, this message translates to:
   /// **'New level'**
   String get newLevel;
+
+  /// No description provided for @settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settings;
+
+  /// No description provided for @soundLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Sound & haptics'**
+  String get soundLabel;
+
+  /// No description provided for @languageLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get languageLabel;
+
+  /// No description provided for @systemLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'System'**
+  String get systemLanguage;
+
+  /// No description provided for @chooseDifficulty.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a difficulty'**
+  String get chooseDifficulty;
+
+  /// No description provided for @difficultyEasy.
+  ///
+  /// In en, this message translates to:
+  /// **'Easy'**
+  String get difficultyEasy;
+
+  /// No description provided for @difficultyMedium.
+  ///
+  /// In en, this message translates to:
+  /// **'Medium'**
+  String get difficultyMedium;
+
+  /// No description provided for @difficultyHard.
+  ///
+  /// In en, this message translates to:
+  /// **'Hard'**
+  String get difficultyHard;
+
+  /// No description provided for @undo.
+  ///
+  /// In en, this message translates to:
+  /// **'Undo'**
+  String get undo;
+
+  /// No description provided for @hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Hint'**
+  String get hint;
+
+  /// No description provided for @nextLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get nextLevel;
+
+  /// No description provided for @lockedLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Locked'**
+  String get lockedLabel;
+
+  /// No description provided for @levelLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Level {number}'**
+  String levelLabel(int number);
+
+  /// No description provided for @bestMovesLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Best: {moves}'**
+  String bestMovesLabel(int moves);
 }
 
 class _AppLocalizationsDelegate

@@ -4,11 +4,11 @@
 
 | Alan | Değer |
 |---|---|
-| Faz | 2 — Seviye üreteci |
-| Durum | GATE 1 bekleniyor (PR açık: phase-2-generator; CI + APK artifact) |
+| Faz | 3 — Oyun döngüsü ve UI |
+| Durum | PR açık (phase-3-gameloop), CI bekleniyor |
 | Kod adı | ShiftGrid (paket: `com.aktasilyas.shiftgrid`) |
-| Son commit | phase-2 level generator |
-| Aktif branch | `phase-2-generator` |
+| Son commit | phase-3 game loop & UI |
+| Aktif branch | `phase-3-gameloop` |
 
 ## Ortam
 - Flutter 3.38.5 · Dart 3.10.4 (Windows)
@@ -25,10 +25,14 @@
 - FAZ 2: Ters-üretim `LevelGenerator` (deterministik, seed'li) + `Difficulty` profilleri
   (easy/medium/hard) + açık-atış kapısı (>oran → üret-ve-at). Property test: 1000 seed × 3 zorluk
   hepsi çözülebilir + determinizm testi. Generator GameNotifier'a bağlandı (elle demo kaldırıldı);
-  "Yeni bölüm" akışı. Toplam 30 test yeşil.
+  "Yeni bölüm" akışı. Toplam 30 test yeşil. (PR #3 merged)
+- FAZ 3: Menü → zorluk → seviye seçim → oyun navigasyonu; Hive ilerleme (tamamlanma + en iyi hamle,
+  sıralı kilit açma); ayarlar (shared_preferences: ses + dil TR/EN/sistem); SoundController
+  (SystemSound + haptik, lisanssız asset yok); undo (history) + ipucu (max-id invariantı);
+  flutter_animate mikro-etkileşimler. 39 test yeşil, analyze temiz.
 
 ## Sıradaki
-- GATE 1 onayı sonrası FAZ 3 — Oyun döngüsü ve UI (menü, seviye seçim, Hive ilerleme, ses, tema).
+- FAZ 4 — Farklılaştırma ve içerik (özgün mekanik, günlük görev, 100+ seviye) → GATE 2 (LEGAL).
 
 ## Açık riskler / notlar
 - `hive_generator` analyzer 6.x'e pinliyor; ileride codegen ihtiyacı olursa sürüm çakışması izlenecek.
