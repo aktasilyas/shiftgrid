@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'core/l10n/app_localizations.dart';
 import 'core/theme/app_theme.dart';
+import 'features/game/presentation/screens/game_screen.dart';
 
 void main() {
   runApp(const ProviderScope(child: ShiftGridApp()));
@@ -24,32 +25,7 @@ class ShiftGridApp extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: AppLocalizations.supportedLocales,
-      home: const _HomePlaceholder(),
-    );
-  }
-}
-
-/// Temporary landing screen. The real menu arrives in Phase 3.
-class _HomePlaceholder extends StatelessWidget {
-  const _HomePlaceholder();
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              l10n.appTitle,
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-            const SizedBox(height: 16),
-            FilledButton(onPressed: null, child: Text(l10n.play)),
-          ],
-        ),
-      ),
+      home: const GameScreen(),
     );
   }
 }

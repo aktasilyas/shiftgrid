@@ -109,6 +109,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Play'**
   String get play;
+
+  /// Restart the current board.
+  ///
+  /// In en, this message translates to:
+  /// **'Restart'**
+  String get restart;
+
+  /// Label for the move counter.
+  ///
+  /// In en, this message translates to:
+  /// **'Moves'**
+  String get movesLabel;
+
+  /// Shown when all arrows are removed.
+  ///
+  /// In en, this message translates to:
+  /// **'Board cleared!'**
+  String get youWon;
+
+  /// Shown when the player runs out of lives.
+  ///
+  /// In en, this message translates to:
+  /// **'Out of lives'**
+  String get youLost;
+
+  /// Short gameplay hint on the game screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap an arrow to slide it out. Clear them all.'**
+  String get howToPlay;
 }
 
 class _AppLocalizationsDelegate

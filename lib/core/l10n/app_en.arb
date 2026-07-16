@@ -7,5 +7,25 @@
   "play": "Play",
   "@play": {
     "description": "Play button label."
+  },
+  "restart": "Restart",
+  "@restart": {
+    "description": "Restart the current board."
+  },
+  "movesLabel": "Moves",
+  "@movesLabel": {
+    "description": "Label for the move counter."
+  },
+  "youWon": "Board cleared!",
+  "@youWon": {
+    "description": "Shown when all arrows are removed."
+  },
+  "youLost": "Out of lives",
+  "@youLost": {
+    "description": "Shown when the player runs out of lives."
+  },
+  "howToPlay": "Tap an arrow to slide it out. Clear them all.",
+  "@howToPlay": {
+    "description": "Short gameplay hint on the game screen."
   }
 }

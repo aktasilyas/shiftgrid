@@ -1,5 +1,10 @@
 {
   "@@locale": "tr",
   "appTitle": "ShiftGrid",
-  "play": "Oyna"
+  "play": "Oyna",
+  "restart": "Yeniden",
+  "movesLabel": "Hamle",
+  "youWon": "Tahta temizlendi!",
+  "youLost": "Canın bitti",
+  "howToPlay": "Bir oku dokunarak dışarı kaydır. Hepsini temizle."
 }

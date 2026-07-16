@@ -13,4 +13,19 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get play => 'Oyna';
+
+  @override
+  String get restart => 'Yeniden';
+
+  @override
+  String get movesLabel => 'Hamle';
+
+  @override
+  String get youWon => 'Tahta temizlendi!';
+
+  @override
+  String get youLost => 'Canın bitti';
+
+  @override
+  String get howToPlay => 'Bir oku dokunarak dışarı kaydır. Hepsini temizle.';
 }
