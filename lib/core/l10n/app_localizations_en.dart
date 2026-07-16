@@ -13,4 +13,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get play => 'Play';
+
+  @override
+  String get restart => 'Restart';
+
+  @override
+  String get movesLabel => 'Moves';
+
+  @override
+  String get youWon => 'Board cleared!';
+
+  @override
+  String get youLost => 'Out of lives';
+
+  @override
+  String get howToPlay => 'Tap an arrow to slide it out. Clear them all.';
 }
