@@ -1,0 +1,22 @@
+---
+description: Project constitution — non-negotiable technical & workflow rules.
+alwaysApply: true
+---
+
+# ShiftGrid Anayasası
+
+## Teknik
+- Render: saf Flutter + `CustomPainter`. Flame YOK, hücre-başına-widget YOK.
+- State: Riverpod (Notifier/AsyncNotifier). Global singleton yok; DI provider ile.
+- Mimari: Clean Architecture, feature-first (`lib/features/<feature>/{domain,data,presentation}`).
+- Domain saf Dart: `package:flutter` importu YASAK (CI kontrol eder).
+- Kalıcılık: shared_preferences (ayar) + hive (ilerleme).
+- Lokalizasyon: flutter_localizations + ARB. Hardcoded string YASAK.
+- Android: minSdk 24, target/compile API 36.
+
+## Çalışma kuralları
+- Sorma, yap; kararı `docs/DECISIONS.md`'ye yaz. Yalnızca GATE'lerde dur.
+- Küçük adımlar: branch → kod → test → commit → PR. Test geçmeyen merge edilmez.
+- `main`'e doğrudan push YOK. Sır (key/.env/*.jks) commit'lenmez.
+- Placeholder/TODO bırakma; yapılamayanı `docs/BACKLOG.md`'ye yaz.
+- Uzun görevlerde önce `docs/STATE.md` oku, bitince güncelle.

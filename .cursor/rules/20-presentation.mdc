@@ -1,0 +1,14 @@
+---
+description: Presentation layer rules — CustomPainter, Riverpod, no widget-per-cell.
+globs: lib/features/*/presentation/**
+---
+
+# Presentation katmanı
+
+- Izgara/oyun tahtası **tek bir `CustomPainter`** ile çizilir. Hücre başına widget YASAK.
+- Tap → grid koordinat çevrimi painter/geometri yardımcılarıyla yapılır.
+- State erişimi **Riverpod** ile: `ConsumerWidget`/`Consumer`, `ref.watch`/`ref.read`.
+  İş mantığı widget'ta değil, Notifier/use-case'te.
+- UI yalnızca domain durumunu yansıtır; iş kuralı presentation'da tekrarlanmaz.
+- Tüm kullanıcıya görünen metinler `AppLocalizations` üzerinden (hardcoded string YASAK).
+- Renkler `AppPalette`/tema üzerinden; sabit renk kodu widget içine gömülmez.

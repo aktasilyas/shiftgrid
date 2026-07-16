@@ -1,0 +1,21 @@
+---
+description: Test conventions — naming, AAA, property test template.
+globs: test/**
+---
+
+# Test kuralları
+
+- Dosya konumu kaynağı yansıtır: `lib/features/game/domain/x.dart` → `test/features/game/domain/x_test.dart`.
+- İsimlendirme: `test('<özne> <beklenen davranış>', ...)`. Grupla: `group('<sınıf/işlev>', ...)`.
+- **AAA deseni:** Arrange → Act → Assert; her testte tek net iddia odağı.
+- Deterministiklik: sabit `seed`/clock kullan; `DateTime.now()`/rastgeleye doğrudan bağlanma.
+- Edge case zorunlu: kenar okları, tek ok, dolu tahta, boş tahta.
+
+## Property test şablonu
+```dart
+for (var seed = 0; seed < 1000; seed++) {
+  final board = generate(seed: seed);
+  final solved = playSolution(board);
+  expect(solved.isCleared, isTrue, reason: 'seed=$seed çözülemedi');
+}
+```

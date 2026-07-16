@@ -1,0 +1,14 @@
+---
+description: Domain layer rules — pure Dart, tested use-cases.
+globs: lib/features/*/domain/**
+---
+
+# Domain katmanı
+
+- **Saf Dart.** `package:flutter` veya herhangi bir UI/IO paketi importu YASAK.
+  Yalnızca `dart:*` (math/collection) ve saf Dart paketleri.
+- Varlıklar mümkünse **immutable** (`final` alanlar, `copyWith`).
+- İş kuralları use-case'lerde; use-case tek sorumluluk taşır.
+- **Her use-case → en az bir birim test** (`test/features/*/domain/**`).
+- Rastlantısallık/zaman dışarıdan enjekte edilir (seed, clock) — deterministik test için.
+- Repository'ler burada yalnızca **arayüz (abstract)** olarak tanımlanır; implementasyon `data/`.
