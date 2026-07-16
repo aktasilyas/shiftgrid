@@ -28,4 +28,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get howToPlay => 'Bir oku dokunarak dışarı kaydır. Hepsini temizle.';
+
+  @override
+  String get newLevel => 'Yeni bölüm';
 }

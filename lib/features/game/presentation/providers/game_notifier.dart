@@ -1,35 +1,34 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../domain/entities/arrow.dart';
-import '../../domain/entities/board.dart';
-import '../../domain/entities/direction.dart';
+import '../../domain/entities/difficulty.dart';
+import '../../domain/entities/generated_level.dart';
 import '../../domain/entities/position.dart';
+import '../../domain/usecases/level_generator.dart';
 import '../../domain/usecases/try_fire.dart';
 import 'game_state.dart';
 
-/// A hand-built, fully solvable 5×5 board used until the generator lands (FAZ 2).
-///
-/// A valid solving order is: #3, #4, #5, #2, #1.
-Board demoBoard() => Board.fromArrows(
-      width: 5,
-      height: 5,
-      arrows: const [
-        Arrow(id: 1, position: Position(0, 0), direction: Direction.down),
-        Arrow(id: 2, position: Position(4, 0), direction: Direction.right),
-        Arrow(id: 3, position: Position(2, 2), direction: Direction.up),
-        Arrow(id: 4, position: Position(2, 4), direction: Direction.left),
-        Arrow(id: 5, position: Position(0, 4), direction: Direction.down),
-      ],
-    );
-
 /// Owns the mutable [GameState]. Domain logic stays in the use-cases; this
-/// notifier only decides how outcomes affect lives and win/lose status.
+/// notifier only decides how outcomes affect lives and win/lose status, and
+/// which generated level is currently loaded.
 class GameNotifier extends Notifier<GameState> {
+  static const _generator = LevelGenerator();
+
+  late GeneratedLevel _level;
+
   @override
-  GameState build() => GameState.initial(demoBoard());
+  GameState build() => _start(seed: 1, difficulty: Difficulty.medium);
+
+  GameState _start({required int seed, required Difficulty difficulty}) {
+    _level = _generator.generate(seed: seed, difficulty: difficulty);
+    return GameState.initial(_level.board);
+  }
+
+  /// A guaranteed solution for the current level (used by hints later).
+  List<Position> get solution => _level.solution;
+
+  Difficulty get difficulty => _level.difficulty;
 
   /// Pure look-ahead: what would happen if [position] were fired now.
-  /// Lets the UI animate before the state actually changes.
   FireResult peek(Position position) => tryFire(state.board, position);
 
   /// Applies a previously [peek]ed result to the game state.
@@ -55,7 +54,14 @@ class GameNotifier extends Notifier<GameState> {
     }
   }
 
-  void reset() => state = GameState.initial(demoBoard());
+  /// Restarts the current level from scratch.
+  void reset() => state = GameState.initial(_level.board);
+
+  /// Loads a new level. Defaults to the next seed at the current difficulty.
+  void newGame({int? seed, Difficulty? difficulty}) => state = _start(
+        seed: seed ?? _level.seed + 1,
+        difficulty: difficulty ?? _level.difficulty,
+      );
 }
 
 final gameProvider = NotifierProvider<GameNotifier, GameState>(GameNotifier.new);

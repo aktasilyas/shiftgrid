@@ -139,6 +139,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Tap an arrow to slide it out. Clear them all.'**
   String get howToPlay;
+
+  /// Loads a freshly generated level.
+  ///
+  /// In en, this message translates to:
+  /// **'New level'**
+  String get newLevel;
 }
 
 class _AppLocalizationsDelegate

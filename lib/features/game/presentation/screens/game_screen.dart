@@ -162,7 +162,10 @@ class _GameScreenState extends ConsumerState<GameScreen>
                     ?.copyWith(color: AppPalette.textMuted),
               ),
             ),
-            _Footer(onRestart: () => ref.read(gameProvider.notifier).reset()),
+            _Footer(
+              onRestart: () => ref.read(gameProvider.notifier).reset(),
+              onNewLevel: () => ref.read(gameProvider.notifier).newGame(),
+            ),
           ],
         ),
       ),
@@ -201,8 +204,9 @@ class _GameScreenState extends ConsumerState<GameScreen>
                 if (!state.isPlaying)
                   _ResultOverlay(
                     status: state.status,
-                    onRestart: () =>
-                        ref.read(gameProvider.notifier).reset(),
+                    onRestart: () => ref.read(gameProvider.notifier).reset(),
+                    onNewLevel: () =>
+                        ref.read(gameProvider.notifier).newGame(),
                   ),
               ],
             ),
@@ -253,29 +257,46 @@ class _StatusBar extends StatelessWidget {
 }
 
 class _Footer extends StatelessWidget {
-  const _Footer({required this.onRestart});
+  const _Footer({required this.onRestart, required this.onNewLevel});
 
   final VoidCallback onRestart;
+  final VoidCallback onNewLevel;
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
-      child: OutlinedButton.icon(
-        onPressed: onRestart,
-        icon: const Icon(Icons.refresh),
-        label: Text(l10n.restart),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          OutlinedButton.icon(
+            onPressed: onRestart,
+            icon: const Icon(Icons.refresh),
+            label: Text(l10n.restart),
+          ),
+          const SizedBox(width: 12),
+          FilledButton.icon(
+            onPressed: onNewLevel,
+            icon: const Icon(Icons.grid_view),
+            label: Text(l10n.newLevel),
+          ),
+        ],
       ),
     );
   }
 }
 
 class _ResultOverlay extends StatelessWidget {
-  const _ResultOverlay({required this.status, required this.onRestart});
+  const _ResultOverlay({
+    required this.status,
+    required this.onRestart,
+    required this.onNewLevel,
+  });
 
   final GameStatus status;
   final VoidCallback onRestart;
+  final VoidCallback onNewLevel;
 
   @override
   Widget build(BuildContext context) {
@@ -300,11 +321,18 @@ class _ResultOverlay extends StatelessWidget {
               style: Theme.of(context).textTheme.headlineSmall,
             ),
             const SizedBox(height: 24),
-            FilledButton.icon(
-              onPressed: onRestart,
-              icon: const Icon(Icons.refresh),
-              label: Text(l10n.restart),
-            ),
+            if (won)
+              FilledButton.icon(
+                onPressed: onNewLevel,
+                icon: const Icon(Icons.grid_view),
+                label: Text(l10n.newLevel),
+              )
+            else
+              FilledButton.icon(
+                onPressed: onRestart,
+                icon: const Icon(Icons.refresh),
+                label: Text(l10n.restart),
+              ),
           ],
         ),
       ),

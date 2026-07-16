@@ -27,5 +27,9 @@
   "howToPlay": "Tap an arrow to slide it out. Clear them all.",
   "@howToPlay": {
     "description": "Short gameplay hint on the game screen."
+  },
+  "newLevel": "New level",
+  "@newLevel": {
+    "description": "Loads a freshly generated level."
   }
 }

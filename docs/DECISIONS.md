@@ -43,3 +43,20 @@ Pro yükseltmesi kullanıcının kararı. Bu arada `main` koruması **disiplin +
 tüm değişiklikler `phase-*`/`feat-*` branch'lerinden PR ile gelir, CI yeşil olmadan merge edilmez.
 **Gerekçe:** Repo'yu public yapmak Legal Gate ilkesine aykırı; Pro yükseltmesi PO kararıdır.
 **Aksiyon (BACKLOG):** Pro'ya geçilirse `docs/`'daki ruleset JSON ile koruma etkinleştirilecek.
+
+## 0007 — Üreteç parametreleri ve açık-atış kapısı
+**Tarih:** 2026-07-16
+**Karar:** Zorluk profilleri: easy 4×4/6 ok, medium 5×5/10 ok, hard 6×6/15 ok.
+Açık-atış kapısı `maxOpenRatio` (easy 0.65, medium 0.5, hard 0.45): bitmiş tahtada açık atışı olan
+okların oranı bu eşiği aşarsa seed atılıp yeniden üretilir (maxAttempts=48; bulunamazsa en düşük
+oranlı aday saklanır). Üreteç deterministik: `Random(seed)`.
+**Gerekçe:** Daha az "bariz ilk hamle" → daha bulmaca-hissi. Determinizm test/edilebilirlik ve
+curated seed listeleri (FAZ 4) için şart. Kapı çözülebilirliği etkilemez (invariant korunur).
+
+## 0008 — APK'yı CI'da derle (yerelde JDK yok)
+**Tarih:** 2026-07-16
+**Karar:** Geliştirme makinesinde JDK/Android Studio yok (yalnızca Android SDK 36 var).
+APK, GitHub Actions'ta (temurin JDK 17 + subosito flutter-action) `flutter build apk --release`
+ile derlenip `shiftgrid-release-apk` artifact'ı olarak yüklenir.
+**Gerekçe:** Kullanıcının sistemine JDK kurmadan tekrarlanabilir, indirilebilir APK üretmek.
+Yerel derleme gerekirse portable JDK + `flutter config --jdk-dir` ile eklenebilir (BACKLOG).

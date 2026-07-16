@@ -28,4 +28,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get howToPlay => 'Tap an arrow to slide it out. Clear them all.';
+
+  @override
+  String get newLevel => 'New level';
 }
