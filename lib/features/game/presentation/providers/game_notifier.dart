@@ -13,6 +13,9 @@ import 'game_state.dart';
 class GameNotifier extends Notifier<GameState> {
   static const _generator = LevelGenerator();
 
+  /// Every Nth consecutive escape (combo) refunds one life, up to max.
+  static const comboRewardThreshold = 4;
+
   late GeneratedLevel _level;
   final List<GameState> _history = [];
 
@@ -53,9 +56,15 @@ class GameNotifier extends Notifier<GameState> {
       case FireOutcome.escaped:
         _history.add(state);
         final board = result.board;
+        final combo = state.combo + 1;
+        final rewardLife = combo % comboRewardThreshold == 0 &&
+            state.lives < state.maxLives;
         state = state.copyWith(
           board: board,
           moves: state.moves + 1,
+          combo: combo,
+          bestCombo: combo > state.bestCombo ? combo : state.bestCombo,
+          lives: rewardLife ? state.lives + 1 : state.lives,
           status: board.isCleared ? GameStatus.won : GameStatus.playing,
         );
       case FireOutcome.collided:
@@ -64,6 +73,7 @@ class GameNotifier extends Notifier<GameState> {
         state = state.copyWith(
           lives: lives,
           moves: state.moves + 1,
+          combo: 0,
           status: lives <= 0 ? GameStatus.lost : GameStatus.playing,
         );
     }

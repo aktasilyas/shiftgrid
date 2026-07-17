@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/di/providers.dart';
 import '../../../../core/l10n/app_localizations.dart';
 import '../../../../core/theme/app_palette.dart';
 import '../../domain/entities/difficulty.dart';
+import '../../domain/usecases/daily_challenge.dart';
 import '../widgets/difficulty_label.dart';
+import 'game_screen.dart';
 import 'level_select_screen.dart';
 import 'settings_screen.dart';
 
@@ -84,11 +87,43 @@ class MenuScreen extends ConsumerWidget {
                     .animate()
                     .fadeIn(delay: (300 + i * 100).ms)
                     .slideX(begin: 0.2, end: 0),
+              const SizedBox(height: 8),
+              _DailyButton(),
             ],
           ),
         ),
       ),
     );
+  }
+}
+
+class _DailyButton extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
+    final streak = ref.watch(streakRepositoryProvider).streak;
+    final today = dayIndex(DateTime.now());
+
+    final label = streak > 0
+        ? '${l10n.dailyChallenge}  •  ${l10n.streakLabel(streak)}'
+        : l10n.dailyChallenge;
+
+    return OutlinedButton.icon(
+      style: OutlinedButton.styleFrom(
+        padding: const EdgeInsets.symmetric(vertical: 14),
+      ),
+      onPressed: () => Navigator.of(context).push(
+        MaterialPageRoute<void>(
+          builder: (_) => GameScreen(
+            seed: dailySeed(today),
+            difficulty: Difficulty.medium,
+            isDaily: true,
+          ),
+        ),
+      ),
+      icon: const Icon(Icons.today, color: AppPalette.teal),
+      label: Text(label),
+    ).animate().fadeIn(delay: 700.ms);
   }
 }
 

@@ -77,4 +77,17 @@ class AppLocalizationsTr extends AppLocalizations {
   String bestMovesLabel(int moves) {
     return 'En iyi: $moves';
   }
+
+  @override
+  String get dailyChallenge => 'Günlük görev';
+
+  @override
+  String streakLabel(int days) {
+    return '$days günlük seri';
+  }
+
+  @override
+  String comboLabel(int count) {
+    return 'Kombo x$count';
+  }
 }

@@ -77,4 +77,17 @@ class AppLocalizationsEn extends AppLocalizations {
   String bestMovesLabel(int moves) {
     return 'Best: $moves';
   }
+
+  @override
+  String get dailyChallenge => 'Daily challenge';
+
+  @override
+  String streakLabel(int days) {
+    return '$days day streak';
+  }
+
+  @override
+  String comboLabel(int count) {
+    return 'Combo x$count';
+  }
 }

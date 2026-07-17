@@ -34,5 +34,18 @@
     "placeholders": {
       "moves": { "type": "int" }
     }
+  },
+  "dailyChallenge": "Daily challenge",
+  "streakLabel": "{days} day streak",
+  "@streakLabel": {
+    "placeholders": {
+      "days": { "type": "int" }
+    }
+  },
+  "comboLabel": "Combo x{count}",
+  "@comboLabel": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
   }
 }
