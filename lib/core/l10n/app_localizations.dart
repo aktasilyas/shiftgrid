@@ -229,6 +229,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Best: {moves}'**
   String bestMovesLabel(int moves);
+
+  /// No description provided for @dailyChallenge.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily challenge'**
+  String get dailyChallenge;
+
+  /// No description provided for @streakLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'{days} day streak'**
+  String streakLabel(int days);
+
+  /// No description provided for @comboLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Combo x{count}'**
+  String comboLabel(int count);
 }
 
 class _AppLocalizationsDelegate

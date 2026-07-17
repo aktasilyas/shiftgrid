@@ -75,3 +75,12 @@ Lisanslı/özgün sfx BACKLOG'da.
 Seviyeler zorluk başına sıralı açılır (seed n, n-1 tamamlanınca açılır). `ProgressRepository`
 arayüzü domain'de; impl data'da, test için `ProgressStore` soyutlaması (Hive'sız InMemory).
 **Gerekçe:** Basit, deterministik, test edilebilir; Hive detayını domain'den uzak tutar.
+
+## 0011 — Özgün mekanik: zincir-kombo + günlük seri
+**Tarih:** 2026-07-16
+**Karar:** Farklılaştırıcı özgün mekanik olarak **zincir-kombo**: ardışık başarılı çıkışlar komboyu
+artırır, çarpışma sıfırlar; her `comboRewardThreshold` (4) komboda, can eksikse **1 can iade edilir**.
+Ek olarak **günlük görev + gün-serisi (streak)**: güne özel deterministik seed, ardışık günlerde
+oynanınca seri artar. Çözülebilirlik invariantını etkilemez (yalnızca puan/can/motivasyon katmanı).
+**Gerekçe:** BOOTSTRAP §1 "en az 1 özgün mekanik" + §4 "günlük görev/seri". Risk-ödül döngüsü
+(komboyu koruma) oyuna özgün bir ritim katar; invariantı bozmadan eklenir ve teste bağlanır.

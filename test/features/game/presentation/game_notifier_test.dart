@@ -131,5 +131,39 @@ void main() {
       }
       expect(notifier.hint(), isNull);
     });
+
+    test('consecutive escapes build a combo', () {
+      final container = makeContainer();
+      final notifier = container.read(gameProvider.notifier);
+
+      for (var i = 0; i < 3; i++) {
+        notifier.applyResult(notifier.peek(notifier.hint()!));
+      }
+      final state = container.read(gameProvider);
+      expect(state.combo, 3);
+      expect(state.bestCombo, 3);
+    });
+
+    test('a combo of the threshold refunds a lost life', () {
+      final container = makeContainer();
+      final notifier = container.read(gameProvider.notifier);
+      final board = container.read(gameProvider).board;
+
+      // Lose a life on a blocked shot.
+      final blocked = board.arrows
+          .map((a) => a.position)
+          .firstWhere((p) => notifier.peek(p).didCollide);
+      notifier.applyResult(notifier.peek(blocked));
+      expect(container.read(gameProvider).lives,
+          container.read(gameProvider).maxLives - 1);
+
+      // Chain enough escapes to hit the reward threshold.
+      for (var i = 0; i < GameNotifier.comboRewardThreshold; i++) {
+        notifier.applyResult(notifier.peek(notifier.hint()!));
+      }
+      final state = container.read(gameProvider);
+      expect(state.combo, GameNotifier.comboRewardThreshold);
+      expect(state.lives, state.maxLives, reason: 'life should be refunded');
+    });
   });
 }

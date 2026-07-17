@@ -15,6 +15,7 @@ import '../../domain/entities/board.dart';
 import '../../domain/entities/difficulty.dart';
 import '../../domain/entities/direction.dart';
 import '../../domain/entities/position.dart';
+import '../../domain/usecases/daily_challenge.dart';
 import '../../domain/usecases/try_fire.dart';
 import '../painters/board_geometry.dart';
 import '../painters/board_painter.dart';
@@ -23,10 +24,16 @@ import '../providers/game_state.dart';
 
 /// The playable screen for a single generated level.
 class GameScreen extends ConsumerStatefulWidget {
-  const GameScreen({required this.seed, required this.difficulty, super.key});
+  const GameScreen({
+    required this.seed,
+    required this.difficulty,
+    this.isDaily = false,
+    super.key,
+  });
 
   final int seed;
   final Difficulty difficulty;
+  final bool isDaily;
 
   @override
   ConsumerState<GameScreen> createState() => _GameScreenState();
@@ -174,13 +181,21 @@ class _GameScreenState extends ConsumerState<GameScreen>
       final justWon =
           next.status == GameStatus.won && prev?.status != GameStatus.won;
       if (justWon) {
-        unawaited(
-          ref.read(progressRepositoryProvider).recordCompletion(
-                widget.difficulty,
-                widget.seed,
-                next.moves,
-              ),
-        );
+        if (widget.isDaily) {
+          unawaited(
+            ref
+                .read(streakRepositoryProvider)
+                .recordDailyCompletion(dayIndex(DateTime.now())),
+          );
+        } else {
+          unawaited(
+            ref.read(progressRepositoryProvider).recordCompletion(
+                  widget.difficulty,
+                  widget.seed,
+                  next.moves,
+                ),
+          );
+        }
         unawaited(ref.read(soundControllerProvider).play(SoundEffect.win));
       }
     });
@@ -189,7 +204,9 @@ class _GameScreenState extends ConsumerState<GameScreen>
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(l10n.levelLabel(widget.seed)),
+        title: Text(
+          widget.isDaily ? l10n.dailyChallenge : l10n.levelLabel(widget.seed),
+        ),
         centerTitle: true,
       ),
       body: SafeArea(
@@ -296,6 +313,25 @@ class _StatusBar extends StatelessWidget {
               );
             }),
           ),
+          if (state.combo >= 2)
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+              decoration: BoxDecoration(
+                color: AppPalette.teal.withValues(alpha: 0.18),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Text(
+                l10n.comboLabel(state.combo),
+                style: Theme.of(context)
+                    .textTheme
+                    .labelLarge
+                    ?.copyWith(color: AppPalette.teal),
+              ),
+            ).animate(key: ValueKey(state.combo)).scale(
+                  duration: 220.ms,
+                  begin: const Offset(0.7, 0.7),
+                  end: const Offset(1, 1),
+                ),
           Text(
             '${l10n.movesLabel}: ${state.moves}',
             style: Theme.of(context)

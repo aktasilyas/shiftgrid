@@ -31,5 +31,18 @@
     "placeholders": {
       "moves": { "type": "int" }
     }
+  },
+  "dailyChallenge": "Günlük görev",
+  "streakLabel": "{days} günlük seri",
+  "@streakLabel": {
+    "placeholders": {
+      "days": { "type": "int" }
+    }
+  },
+  "comboLabel": "Kombo x{count}",
+  "@comboLabel": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
   }
 }
