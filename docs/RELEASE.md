@@ -107,3 +107,32 @@ Play: telefon için en az 2 (min 320px), 16:9 veya 9:16. Öneri: 1080×1920.
 9. Geri bildirim → düzeltme → **production** erişim başvurusu.
 
 > Not: Play Console adımları kullanıcının manuel yapacağı tek kısımdır.
+
+## 10. Kapalı test (FAZ 7 — tıkla-geç)
+
+Kasım 2023 sonrası açılan **kişisel** geliştirici hesapları için prodüksiyona
+geçmeden önce zorunlu: **en az 12 testçi, 14 gün kesintisiz** kapalı test.
+
+1. **AAB hazırla:** `flutter build appbundle --release` (gerçek ID'lerle, §1).
+2. Play Console → **Testing → Closed testing → Create track** (örn. "alpha").
+3. **Testers:** bir e-posta listesi oluştur, ≥12 gerçek Google hesabı ekle
+   (test edenlerin katılım bağlantısını kabul etmesi gerekir).
+4. **Create release** → AAB yükle → sürüm notları (CHANGELOG'dan) → **Review → Rollout**.
+5. Testçilere **opt-in URL**'yi paylaş; kurup en az 14 gün aktif kullanmalarını iste.
+6. **14 gün boyunca kesintisiz** en az 12 testçi kalsın (düşerse sayaç sıfırlanabilir).
+7. **Geri bildirim** topla (Play Console → Feedback + doğrudan). Hataları düzelt →
+   versiyonu artır (`pubspec.yaml` `version: 1.0.0+2` ...) → yeni AAB yükle.
+8. 14 gün + ≥12 testçi tamamlanınca **Production access** başvurusunu doldur.
+9. Onaylanınca **Production** track'e release oluştur → aşamalı yayın (staged rollout).
+
+### Sürümleme
+- `pubspec.yaml` → `version: <marketing>+<build>` (ör. `1.0.1+3`).
+- Her yüklemede **build numarası artmalı**. Değişiklikleri `CHANGELOG.md`'ye işle.
+
+### Yayın öncesi son kontrol (tekrarlı)
+- [ ] Gerçek AdMob ID'leri (`--dart-define`) + manifest app id
+- [ ] `remove_ads` ürünü aktif, satın alma/geri yükleme test edildi
+- [ ] Privacy policy URL yayında ve listelemede
+- [ ] Data safety + içerik derecelendirme + "Reklam içerir" işaretli
+- [ ] Ekran görüntüleri kendi build'imizden yüklendi
+- [ ] `flutter analyze` temiz, tüm testler yeşil, CI release build yeşil
