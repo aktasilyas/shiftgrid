@@ -90,4 +90,16 @@ class AppLocalizationsTr extends AppLocalizations {
   String comboLabel(int count) {
     return 'Kombo x$count';
   }
+
+  @override
+  String get watchAdForLife => 'Can için reklam izle';
+
+  @override
+  String get removeAds => 'Reklamları kaldır';
+
+  @override
+  String get restorePurchases => 'Satın alımları geri yükle';
+
+  @override
+  String get adsRemovedActive => 'Reklamlar kaldırıldı — teşekkürler!';
 }

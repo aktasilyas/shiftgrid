@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -28,11 +31,32 @@ Future<void> main() async {
   );
 }
 
-class ShiftGridApp extends ConsumerWidget {
+class ShiftGridApp extends ConsumerStatefulWidget {
   const ShiftGridApp({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ShiftGridApp> createState() => _ShiftGridAppState();
+}
+
+class _ShiftGridAppState extends ConsumerState<ShiftGridApp> {
+  @override
+  void initState() {
+    super.initState();
+    _initServices();
+  }
+
+  Future<void> _initServices() async {
+    if (kIsWeb || !(Platform.isAndroid || Platform.isIOS)) return;
+    try {
+      await ref.read(adServiceProvider).initialize();
+      await ref.read(purchaseServiceProvider).initialize();
+    } catch (e) {
+      debugPrint('service init failed: $e');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final settings = ref.watch(settingsProvider);
     final locale = settings.languageCode == null
         ? null

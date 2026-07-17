@@ -247,6 +247,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Combo x{count}'**
   String comboLabel(int count);
+
+  /// No description provided for @watchAdForLife.
+  ///
+  /// In en, this message translates to:
+  /// **'Watch ad for a life'**
+  String get watchAdForLife;
+
+  /// No description provided for @removeAds.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove ads'**
+  String get removeAds;
+
+  /// No description provided for @restorePurchases.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore purchases'**
+  String get restorePurchases;
+
+  /// No description provided for @adsRemovedActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Ads removed — thank you!'**
+  String get adsRemovedActive;
 }
 
 class _AppLocalizationsDelegate
