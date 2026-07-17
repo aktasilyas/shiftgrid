@@ -31,4 +31,50 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get newLevel => 'New level';
+
+  @override
+  String get settings => 'Settings';
+
+  @override
+  String get soundLabel => 'Sound & haptics';
+
+  @override
+  String get languageLabel => 'Language';
+
+  @override
+  String get systemLanguage => 'System';
+
+  @override
+  String get chooseDifficulty => 'Choose a difficulty';
+
+  @override
+  String get difficultyEasy => 'Easy';
+
+  @override
+  String get difficultyMedium => 'Medium';
+
+  @override
+  String get difficultyHard => 'Hard';
+
+  @override
+  String get undo => 'Undo';
+
+  @override
+  String get hint => 'Hint';
+
+  @override
+  String get nextLevel => 'Next';
+
+  @override
+  String get lockedLabel => 'Locked';
+
+  @override
+  String levelLabel(int number) {
+    return 'Level $number';
+  }
+
+  @override
+  String bestMovesLabel(int moves) {
+    return 'Best: $moves';
+  }
 }

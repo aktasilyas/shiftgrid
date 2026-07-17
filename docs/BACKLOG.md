@@ -11,6 +11,9 @@ Yapılamayan veya sonraya bırakılan işler burada; placeholder/TODO yerine bur
 - [ ] **Store/marketing nihai ad** — Legal Gate (§6) sonrası kesinleştir.
 - [ ] **Yerel APK derleme** — geliştirme makinesine portable JDK 17 + `flutter config --jdk-dir`
       (şu an APK yalnızca CI'da derleniyor, bkz. DECISIONS #0008).
+- [ ] **Lisanslı/özgün ses efektleri** — `audioplayers` ile escape/collide/win sfx; lisanslar
+      `docs/LICENSES.md`'ye (şu an yalnızca SystemSound + haptik, bkz. DECISIONS #0009).
+- [ ] **Widget/entegrasyon testleri** — menü→seviye seçim→oyun akışı ve overlay'ler için.
 
 ## Kapandı
 - (henüz yok)

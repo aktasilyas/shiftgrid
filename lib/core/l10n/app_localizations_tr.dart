@@ -31,4 +31,50 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get newLevel => 'Yeni bölüm';
+
+  @override
+  String get settings => 'Ayarlar';
+
+  @override
+  String get soundLabel => 'Ses ve titreşim';
+
+  @override
+  String get languageLabel => 'Dil';
+
+  @override
+  String get systemLanguage => 'Sistem';
+
+  @override
+  String get chooseDifficulty => 'Zorluk seç';
+
+  @override
+  String get difficultyEasy => 'Kolay';
+
+  @override
+  String get difficultyMedium => 'Orta';
+
+  @override
+  String get difficultyHard => 'Zor';
+
+  @override
+  String get undo => 'Geri al';
+
+  @override
+  String get hint => 'İpucu';
+
+  @override
+  String get nextLevel => 'Sıradaki';
+
+  @override
+  String get lockedLabel => 'Kilitli';
+
+  @override
+  String levelLabel(int number) {
+    return 'Bölüm $number';
+  }
+
+  @override
+  String bestMovesLabel(int moves) {
+    return 'En iyi: $moves';
+  }
 }

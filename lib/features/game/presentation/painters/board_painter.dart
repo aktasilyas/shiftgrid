@@ -20,6 +20,9 @@ class BoardPainter extends CustomPainter {
     this.slidingOpacity = 1.0,
     this.collisionCell,
     this.collisionFlash = 0.0,
+    this.hintCell,
+    this.hintColor = const Color(0xFF4FD1C5),
+    this.hintFlash = 0.0,
   });
 
   final Board board;
@@ -32,6 +35,9 @@ class BoardPainter extends CustomPainter {
   final double slidingOpacity;
   final Position? collisionCell;
   final double collisionFlash;
+  final Position? hintCell;
+  final Color hintColor;
+  final double hintFlash;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -67,6 +73,10 @@ class BoardPainter extends CustomPainter {
         if (collisionCell == pos && collisionFlash > 0) {
           final flash = Paint()
             ..color = Color.lerp(cellColor, collisionColor, collisionFlash)!;
+          canvas.drawRRect(rrect, flash);
+        } else if (hintCell == pos && hintFlash > 0) {
+          final flash = Paint()
+            ..color = Color.lerp(cellColor, hintColor, hintFlash)!;
           canvas.drawRRect(rrect, flash);
         } else {
           canvas.drawRRect(rrect, base);
@@ -120,5 +130,7 @@ class BoardPainter extends CustomPainter {
       old.slideTranslation != slideTranslation ||
       old.slidingOpacity != slidingOpacity ||
       old.collisionCell != collisionCell ||
-      old.collisionFlash != collisionFlash;
+      old.collisionFlash != collisionFlash ||
+      old.hintCell != hintCell ||
+      old.hintFlash != hintFlash;
 }

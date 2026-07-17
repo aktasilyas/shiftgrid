@@ -60,3 +60,18 @@ APK, GitHub Actions'ta (temurin JDK 17 + subosito flutter-action) `flutter build
 ile derlenip `shiftgrid-release-apk` artifact'ı olarak yüklenir.
 **Gerekçe:** Kullanıcının sistemine JDK kurmadan tekrarlanabilir, indirilebilir APK üretmek.
 Yerel derleme gerekirse portable JDK + `flutter config --jdk-dir` ile eklenebilir (BACKLOG).
+
+## 0009 — Ses: SystemSound + haptik (lisanssız asset yok)
+**Tarih:** 2026-07-16
+**Karar:** `SoundController` platformun yerleşik `SystemSound` (click/alert) + `HapticFeedback`
+kullanır; üçüncü taraf ses dosyası paketlenmez. `audioplayers` bağımlılığı ileride lisanslı/özgün
+sfx için eklendi ama şu an kullanılmıyor.
+**Gerekçe:** Legal Gate §6 — lisanssız asset yasak. Yerleşik sesler OS lisansı altında güvenli.
+Lisanslı/özgün sfx BACKLOG'da.
+
+## 0010 — İlerleme & kilit modeli
+**Tarih:** 2026-07-16
+**Karar:** İlerleme Hive `Box<int>` ('progress'), anahtar `"{difficulty}:{seed}"` → en iyi hamle.
+Seviyeler zorluk başına sıralı açılır (seed n, n-1 tamamlanınca açılır). `ProgressRepository`
+arayüzü domain'de; impl data'da, test için `ProgressStore` soyutlaması (Hive'sız InMemory).
+**Gerekçe:** Basit, deterministik, test edilebilir; Hive detayını domain'den uzak tutar.

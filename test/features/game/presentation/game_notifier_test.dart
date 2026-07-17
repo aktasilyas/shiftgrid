@@ -86,5 +86,50 @@ void main() {
       expect(state.board.arrowCount, greaterThan(0));
       expect(notifier.solution.length, state.board.arrowCount);
     });
+
+    test('undo reverts the last move', () {
+      final container = makeContainer();
+      final notifier = container.read(gameProvider.notifier);
+      final startCount = container.read(gameProvider).board.arrowCount;
+
+      notifier.applyResult(notifier.peek(notifier.solution.first));
+      expect(container.read(gameProvider).moves, 1);
+      expect(container.read(gameProvider).board.arrowCount, startCount - 1);
+
+      notifier.undo();
+      expect(container.read(gameProvider).moves, 0);
+      expect(container.read(gameProvider).board.arrowCount, startCount);
+    });
+
+    test('undo with no history is a no-op', () {
+      final container = makeContainer();
+      final notifier = container.read(gameProvider.notifier);
+      notifier.undo();
+      expect(container.read(gameProvider).moves, 0);
+    });
+
+    test('hint always returns a currently-escaping arrow', () {
+      final container = makeContainer();
+      final notifier = container.read(gameProvider.notifier);
+
+      // Play halfway using the guaranteed solution, checking the hint each step.
+      final steps = notifier.solution.length ~/ 2;
+      for (var i = 0; i < steps; i++) {
+        final hint = notifier.hint();
+        expect(hint, isNotNull);
+        expect(notifier.peek(hint!).didEscape, isTrue,
+            reason: 'hint must be a safe move');
+        notifier.applyResult(notifier.peek(notifier.solution[i]));
+      }
+    });
+
+    test('hint returns null when the board is clear', () {
+      final container = makeContainer();
+      final notifier = container.read(gameProvider.notifier);
+      for (final pos in notifier.solution) {
+        notifier.applyResult(notifier.peek(pos));
+      }
+      expect(notifier.hint(), isNull);
+    });
   });
 }

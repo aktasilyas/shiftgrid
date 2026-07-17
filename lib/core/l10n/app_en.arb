@@ -2,34 +2,37 @@
   "@@locale": "en",
   "appTitle": "ShiftGrid",
   "@appTitle": {
-    "description": "The application title shown on the home screen."
+    "description": "The application title."
   },
   "play": "Play",
-  "@play": {
-    "description": "Play button label."
-  },
   "restart": "Restart",
-  "@restart": {
-    "description": "Restart the current board."
-  },
   "movesLabel": "Moves",
-  "@movesLabel": {
-    "description": "Label for the move counter."
-  },
   "youWon": "Board cleared!",
-  "@youWon": {
-    "description": "Shown when all arrows are removed."
-  },
   "youLost": "Out of lives",
-  "@youLost": {
-    "description": "Shown when the player runs out of lives."
-  },
   "howToPlay": "Tap an arrow to slide it out. Clear them all.",
-  "@howToPlay": {
-    "description": "Short gameplay hint on the game screen."
-  },
   "newLevel": "New level",
-  "@newLevel": {
-    "description": "Loads a freshly generated level."
+  "settings": "Settings",
+  "soundLabel": "Sound & haptics",
+  "languageLabel": "Language",
+  "systemLanguage": "System",
+  "chooseDifficulty": "Choose a difficulty",
+  "difficultyEasy": "Easy",
+  "difficultyMedium": "Medium",
+  "difficultyHard": "Hard",
+  "undo": "Undo",
+  "hint": "Hint",
+  "nextLevel": "Next",
+  "lockedLabel": "Locked",
+  "levelLabel": "Level {number}",
+  "@levelLabel": {
+    "placeholders": {
+      "number": { "type": "int" }
+    }
+  },
+  "bestMovesLabel": "Best: {moves}",
+  "@bestMovesLabel": {
+    "placeholders": {
+      "moves": { "type": "int" }
+    }
   }
 }
