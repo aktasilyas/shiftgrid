@@ -4,11 +4,11 @@
 
 | Alan | Değer |
 |---|---|
-| Faz | 4 — Farklılaştırma ve içerik |
-| Durum | GATE 2 (LEGAL) bekleniyor (PR açık: phase-4-content) |
+| Faz | 5 — Monetizasyon |
+| Durum | PR açık (phase-5-monetization), CI bekleniyor |
 | Kod adı | ShiftGrid (paket: `com.aktasilyas.shiftgrid`) |
-| Son commit | phase-4 content & differentiation |
-| Aktif branch | `phase-4-content` |
+| Son commit | phase-5 monetization (test ads + IAP skeleton) |
+| Aktif branch | `phase-5-monetization` |
 
 ## Ortam
 - Flutter 3.38.5 · Dart 3.10.4 (Windows)
@@ -31,10 +31,14 @@
   (SystemSound + haptik, lisanssız asset yok); undo (history) + ipucu (max-id invariantı);
   flutter_animate mikro-etkileşimler. 39 test yeşil, analyze temiz. (PR #4 merged)
 - FAZ 4: Özgün mekanik zincir-kombo (can iadesi) + günlük görev/seri (streak, pure logic + repo);
-  120 seviye (zorluk başına 40); LEGAL.md §6 kontrol listesi. 51 test yeşil, analyze temiz.
+  120 seviye (zorluk başına 40); LEGAL.md §6 kontrol listesi. 51 test yeşil, analyze temiz. (GATE 2 onaylandı, PR #5 merged)
+- FAZ 5: Monetizasyon — AdMob YALNIZCA test ID'leri (banner/interstitial/rewarded); interstitial
+  cadence (AdGatePolicy, saf+test); rewarded ile "can için reklam izle" revive; IAP iskeleti
+  (remove_ads non-consumable) + entitlement (ProgressStore); ayarlarda reklam kaldır/geri yükle.
+  56 test yeşil, analyze temiz.
 
 ## Sıradaki
-- GATE 2 onayı sonrası FAZ 5 — Monetizasyon (AdMob test ID + IAP iskeleti).
+- FAZ 6 — Mağaza hazırlığı (özgün ikon, ekran görüntüleri, store metinleri) + gerçek AdMob/IAP ID'leri.
 
 ## Açık riskler / notlar
 - `hive_generator` analyzer 6.x'e pinliyor; ileride codegen ihtiyacı olursa sürüm çakışması izlenecek.

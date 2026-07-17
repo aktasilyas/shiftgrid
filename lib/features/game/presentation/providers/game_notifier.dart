@@ -85,6 +85,13 @@ class GameNotifier extends Notifier<GameState> {
     state = _history.removeLast();
   }
 
+  /// Restores one life after a loss (e.g. via a rewarded ad).
+  void revive() {
+    if (state.status != GameStatus.lost) return;
+    _history.clear();
+    state = state.copyWith(lives: 1, status: GameStatus.playing, combo: 0);
+  }
+
   /// Restarts the current level.
   void reset() => state = _start(seed: _level.seed, difficulty: _level.difficulty);
 

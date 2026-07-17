@@ -44,5 +44,9 @@
     "placeholders": {
       "count": { "type": "int" }
     }
-  }
+  },
+  "watchAdForLife": "Can için reklam izle",
+  "removeAds": "Reklamları kaldır",
+  "restorePurchases": "Satın alımları geri yükle",
+  "adsRemovedActive": "Reklamlar kaldırıldı — teşekkürler!"
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/di/providers.dart';
 import '../../../../core/l10n/app_localizations.dart';
 import '../../../../core/settings/settings_notifier.dart';
 
@@ -12,6 +13,7 @@ class SettingsScreen extends ConsumerWidget {
     final l10n = AppLocalizations.of(context);
     final settings = ref.watch(settingsProvider);
     final notifier = ref.read(settingsProvider.notifier);
+    final adsRemoved = ref.watch(entitlementRepositoryProvider).adsRemoved;
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.settings)),
@@ -46,6 +48,25 @@ class SettingsScreen extends ConsumerWidget {
                 ],
               ),
             ),
+            const Divider(),
+            if (adsRemoved)
+              ListTile(
+                leading: const Icon(Icons.check_circle_outline),
+                title: Text(l10n.adsRemovedActive),
+              )
+            else ...[
+              ListTile(
+                leading: const Icon(Icons.block),
+                title: Text(l10n.removeAds),
+                onTap: () => ref.read(purchaseServiceProvider).buyRemoveAds(),
+              ),
+              ListTile(
+                leading: const Icon(Icons.restore),
+                title: Text(l10n.restorePurchases),
+                onTap: () =>
+                    ref.read(purchaseServiceProvider).restorePurchases(),
+              ),
+            ],
           ],
         ),
       ),

@@ -47,5 +47,9 @@
     "placeholders": {
       "count": { "type": "int" }
     }
-  }
+  },
+  "watchAdForLife": "Watch ad for a life",
+  "removeAds": "Remove ads",
+  "restorePurchases": "Restore purchases",
+  "adsRemovedActive": "Ads removed — thank you!"
 }

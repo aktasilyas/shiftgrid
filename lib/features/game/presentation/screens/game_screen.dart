@@ -158,6 +158,23 @@ class _GameScreenState extends ConsumerState<GameScreen>
         Direction.up => (arrow.position.row + 1).toDouble(),
       };
 
+  void _maybeShowInterstitial() {
+    final wins = ref.read(sessionWinsProvider.notifier).increment();
+    final adsRemoved = ref.read(entitlementRepositoryProvider).adsRemoved;
+    final shouldShow = ref.read(adGatePolicyProvider).shouldShowInterstitial(
+          completedLevels: wins,
+          adsRemoved: adsRemoved,
+        );
+    if (shouldShow) {
+      unawaited(ref.read(adServiceProvider).showInterstitial());
+    }
+  }
+
+  Future<void> _watchAdToRevive() async {
+    final earned = await ref.read(adServiceProvider).showRewarded();
+    if (earned) ref.read(gameProvider.notifier).revive();
+  }
+
   void _nextLevel() {
     final nextSeed = widget.seed + 1;
     if (nextSeed > levelsPerDifficulty) {
@@ -197,6 +214,7 @@ class _GameScreenState extends ConsumerState<GameScreen>
           );
         }
         unawaited(ref.read(soundControllerProvider).play(SoundEffect.win));
+        _maybeShowInterstitial();
       }
     });
 
@@ -277,6 +295,9 @@ class _GameScreenState extends ConsumerState<GameScreen>
                     status: state.status,
                     onRestart: () => ref.read(gameProvider.notifier).reset(),
                     onNext: _nextLevel,
+                    onWatchAd: _watchAdToRevive,
+                    showWatchAd: state.status == GameStatus.lost &&
+                        !ref.read(entitlementRepositoryProvider).adsRemoved,
                   ),
               ],
             ),
@@ -412,11 +433,15 @@ class _ResultOverlay extends StatelessWidget {
     required this.status,
     required this.onRestart,
     required this.onNext,
+    required this.onWatchAd,
+    required this.showWatchAd,
   });
 
   final GameStatus status;
   final VoidCallback onRestart;
   final VoidCallback onNext;
+  final VoidCallback onWatchAd;
+  final bool showWatchAd;
 
   @override
   Widget build(BuildContext context) {
@@ -444,12 +469,20 @@ class _ResultOverlay extends StatelessWidget {
                 icon: const Icon(Icons.arrow_forward),
                 label: Text(l10n.nextLevel),
               )
-            else
-              FilledButton.icon(
+            else ...[
+              if (showWatchAd)
+                FilledButton.icon(
+                  onPressed: onWatchAd,
+                  icon: const Icon(Icons.play_circle_outline),
+                  label: Text(l10n.watchAdForLife),
+                ),
+              const SizedBox(height: 12),
+              OutlinedButton.icon(
                 onPressed: onRestart,
                 icon: const Icon(Icons.refresh),
                 label: Text(l10n.restart),
               ),
+            ],
           ],
         ),
       ),

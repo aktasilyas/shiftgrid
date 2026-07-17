@@ -84,3 +84,15 @@ Ek olarak **günlük görev + gün-serisi (streak)**: güne özel deterministik 
 oynanınca seri artar. Çözülebilirlik invariantını etkilemez (yalnızca puan/can/motivasyon katmanı).
 **Gerekçe:** BOOTSTRAP §1 "en az 1 özgün mekanik" + §4 "günlük görev/seri". Risk-ödül döngüsü
 (komboyu koruma) oyuna özgün bir ritim katar; invariantı bozmadan eklenir ve teste bağlanır.
+
+## 0012 — Monetizasyon: yalnızca test reklam ID'leri + IAP iskeleti
+**Tarih:** 2026-07-16
+**Karar:** `google_mobile_ads` ile banner + interstitial + rewarded; **yalnızca Google resmi TEST
+ID'leri** (`AdConfig`, manifest `APPLICATION_ID` test app id). Interstitial gösterimi saf
+`AdGatePolicy` (her N=3 bölümde bir, reklam kaldırıldıysa hiç) ile; rewarded "can için reklam izle"
+kayıp ekranında revive sağlar. `in_app_purchase` ile `remove_ads` non-consumable **iskeleti**
+(query→buy→deliver→restore) + entitlement `ProgressStore`'da. Reklamlar entitlement'a göre gizlenir.
+Servis init yalnızca Android/iOS'ta (test/masaüstünde atlanır).
+**Gerekçe:** BOOTSTRAP §5 — gerçek ID yok, mağaza reddi/politika riski yok. Saf policy + entitlement
+test edilebilir; platform SDK'ları ince sarmalayıcıların arkasında. Gerçek ID'ler, ürün konfigürasyonu
+ve UMP/rıza formu FAZ 6/yayına bırakıldı (BACKLOG).

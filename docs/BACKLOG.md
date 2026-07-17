@@ -14,6 +14,12 @@ Yapılamayan veya sonraya bırakılan işler burada; placeholder/TODO yerine bur
 - [ ] **Lisanslı/özgün ses efektleri** — `audioplayers` ile escape/collide/win sfx; lisanslar
       `docs/LICENSES.md`'ye (şu an yalnızca SystemSound + haptik, bkz. DECISIONS #0009).
 - [ ] **Widget/entegrasyon testleri** — menü→seviye seçim→oyun akışı ve overlay'ler için.
+- [ ] **Gerçek AdMob ID'leri** — `AdConfig` + manifest `APPLICATION_ID` test ID'leri yayından önce
+      gerçek onaylı birimlerle değiştir; `AdConfig.useTestIds=false` (bkz. DECISIONS #0012).
+- [ ] **IAP ürün konfigürasyonu** — Play Console'da `remove_ads` non-consumable ürünü tanımla; uçtan
+      uca satın alma/geri yükleme testi.
+- [ ] **UMP / rıza (GDPR/UMP consent form)** — reklam kişiselleştirme rızası entegrasyonu.
+- [ ] **iOS reklam kimliği** — iOS eklenirse `Info.plist` `GADApplicationIdentifier` + SKAdNetwork.
 
 ## Kapandı
 - (henüz yok)

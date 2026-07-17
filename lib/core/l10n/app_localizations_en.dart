@@ -90,4 +90,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String comboLabel(int count) {
     return 'Combo x$count';
   }
+
+  @override
+  String get watchAdForLife => 'Watch ad for a life';
+
+  @override
+  String get removeAds => 'Remove ads';
+
+  @override
+  String get restorePurchases => 'Restore purchases';
+
+  @override
+  String get adsRemovedActive => 'Ads removed — thank you!';
 }
