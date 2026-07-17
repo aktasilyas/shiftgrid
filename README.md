@@ -1,12 +1,13 @@
 # ShiftGrid
 
-Grid tabanlı minimalist ok bulmacası. N×N ızgarada oklar; bir oka dokun, işaret ettiği yönde
-kaysın. Yol açıksa tahtadan çıkar; başka bir oka çarparsa can kaybedersin. Amaç: tüm okları temizle.
+Grid tabanlı minimalist yılan bulmacası. N×N ızgarada kıvrımlı yılanlar; bir yılana dokun,
+başı işaret ettiği yönde süzülsün. Yol açıksa tahtadan çıkar; başka bir yılana çarparsa
+tıslar ve can kaybedersin. Amaç: tüm yılanları temizle.
 
 > Android öncelikli. Flutter + Riverpod + CustomPainter. Klon değil, özgün türev.
 
 ## Teknoloji
-- Flutter 3.38.5 / Dart 3.10.4
+- Flutter 3.41+ / Dart 3.11+
 - Riverpod (state), Hive + shared_preferences (kalıcılık)
 - flutter_localizations + ARB (TR/EN)
 - Clean Architecture (feature-first), saf Dart domain
@@ -22,18 +23,14 @@ lib/
 ## Geliştirme
 ```bash
 flutter pub get
-flutter gen-l10n
 flutter analyze
 flutter test
 flutter run
 ```
 
-## Dokümanlar
-- `docs/SPEC.md` — ürün/teknik şartname
-- `docs/STATE.md` — kalıcı durum
+## Dokümantasyon
+- `docs/STATE.md` — kalıcı proje hafızası
 - `docs/DECISIONS.md` — karar günlüğü
-- `docs/BACKLOG.md` — ertelenen işler
+- `docs/SPEC.md` — şartname
+- `docs/RELEASE.md` — yayın adımları
 - `docs/BOOTSTRAP.md` — yürütme talimatı
-
-## Lisans
-Özel (private). Üçüncü taraf varlık lisansları: `docs/LICENSES.md`.

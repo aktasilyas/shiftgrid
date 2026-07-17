@@ -12,8 +12,6 @@ void main() {
   const generator = LevelGenerator();
   const seedCount = 1000;
 
-  /// Plays [level.solution] in order; every tap must escape and the board must
-  /// end empty. Returns nothing; asserts inline for precise failure reasons.
   void playAndExpectCleared(GeneratedLevel level) {
     Board board = level.board;
     for (final pos in level.solution) {
@@ -46,19 +44,34 @@ void main() {
     for (var seed = 0; seed < 50; seed++) {
       final a = generator.generate(seed: seed, difficulty: Difficulty.hard);
       final b = generator.generate(seed: seed, difficulty: Difficulty.hard);
-      expect(a.board.arrowCount, b.board.arrowCount);
+      expect(a.board.snakeCount, b.board.snakeCount);
       expect(a.solution, b.solution);
-      for (final arrow in a.board.arrows) {
-        final other = b.board.arrowAt(arrow.position);
+      for (final snake in a.board.snakes) {
+        final other = b.board.snakeAt(snake.head);
         expect(other, isNotNull,
-            reason: 'seed=$seed: position mismatch at ${arrow.position}');
-        expect(other!.direction, arrow.direction);
+            reason: 'seed=$seed: missing snake at ${snake.head}');
+        expect(other!.direction, snake.direction);
+        expect(other.body, snake.body);
       }
     }
   });
 
-  test('solution length equals arrow count', () {
+  test('solution length equals snake count', () {
     final level = generator.generate(seed: 7, difficulty: Difficulty.medium);
-    expect(level.solution.length, level.board.arrowCount);
+    expect(level.solution.length, level.board.snakeCount);
+  });
+
+  test('generated snakes have variable lengths within profile bounds', () {
+    final profile = Difficulty.hard.profile;
+    var sawLong = false;
+    for (var seed = 0; seed < 40; seed++) {
+      final level = generator.generate(seed: seed, difficulty: Difficulty.hard);
+      for (final snake in level.board.snakes) {
+        expect(snake.length, greaterThanOrEqualTo(profile.minLength));
+        expect(snake.length, lessThanOrEqualTo(profile.maxLength));
+        if (snake.length > profile.minLength) sawLong = true;
+      }
+    }
+    expect(sawLong, isTrue, reason: 'expected at least one longer snake');
   });
 }

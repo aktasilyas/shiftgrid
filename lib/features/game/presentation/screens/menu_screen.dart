@@ -143,7 +143,7 @@ class _Logo extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
         ),
         child: const Icon(
-          Icons.arrow_outward,
+          Icons.gesture,
           color: AppPalette.amber,
           size: 48,
         ),

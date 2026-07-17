@@ -10,11 +10,11 @@ import '../../../../core/constants/game_constants.dart';
 import '../../../../core/di/providers.dart';
 import '../../../../core/l10n/app_localizations.dart';
 import '../../../../core/theme/app_palette.dart';
-import '../../domain/entities/arrow.dart';
 import '../../domain/entities/board.dart';
 import '../../domain/entities/difficulty.dart';
 import '../../domain/entities/direction.dart';
 import '../../domain/entities/position.dart';
+import '../../domain/entities/snake.dart';
 import '../../domain/usecases/daily_challenge.dart';
 import '../../domain/usecases/try_fire.dart';
 import '../painters/board_geometry.dart';
@@ -55,7 +55,7 @@ class _GameScreenState extends ConsumerState<GameScreen>
   );
 
   bool _busy = false;
-  int? _slidingArrowId;
+  int? _slidingSnakeId;
   Offset _slideBase = Offset.zero;
   Position? _collisionCell;
   Position? _hintCell;
@@ -63,10 +63,15 @@ class _GameScreenState extends ConsumerState<GameScreen>
   @override
   void initState() {
     super.initState();
-    ref.read(gameProvider.notifier).loadLevel(
-          seed: widget.seed,
-          difficulty: widget.difficulty,
-        );
+    // Riverpod 3 forbids mutating a provider during a widget life-cycle
+    // (initState runs inside build). Defer the load until after the first frame.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      ref.read(gameProvider.notifier).loadLevel(
+            seed: widget.seed,
+            difficulty: widget.difficulty,
+          );
+    });
   }
 
   @override
@@ -92,7 +97,7 @@ class _GameScreenState extends ConsumerState<GameScreen>
 
     final result = ref.read(gameProvider.notifier).peek(pos);
     switch (result.outcome) {
-      case FireOutcome.noArrow:
+      case FireOutcome.noSnake:
         return;
       case FireOutcome.escaped:
         _runSlide(state.board, result);
@@ -102,14 +107,14 @@ class _GameScreenState extends ConsumerState<GameScreen>
   }
 
   void _runSlide(Board board, FireResult result) {
-    final arrow = result.firedArrow!;
-    final dist = _exitDistance(board, arrow) + 0.6;
+    final snake = result.firedSnake!;
+    final dist = _exitDistance(board, snake) + 0.6;
     setState(() {
       _busy = true;
-      _slidingArrowId = arrow.id;
+      _slidingSnakeId = snake.id;
       _slideBase = Offset(
-        arrow.direction.dCol * dist,
-        arrow.direction.dRow * dist,
+        snake.direction.dCol * dist,
+        snake.direction.dRow * dist,
       );
     });
     unawaited(ref.read(soundControllerProvider).play(SoundEffect.escape));
@@ -117,7 +122,7 @@ class _GameScreenState extends ConsumerState<GameScreen>
       ref.read(gameProvider.notifier).applyResult(result);
       setState(() {
         _busy = false;
-        _slidingArrowId = null;
+        _slidingSnakeId = null;
         _slideBase = Offset.zero;
       });
       _slide.reset();
@@ -129,7 +134,7 @@ class _GameScreenState extends ConsumerState<GameScreen>
       _busy = true;
       _collisionCell = result.collisionAt;
     });
-    unawaited(ref.read(soundControllerProvider).play(SoundEffect.collide));
+    unawaited(ref.read(soundControllerProvider).play(SoundEffect.hiss));
     _shake.forward(from: 0).whenComplete(() {
       ref.read(gameProvider.notifier).applyResult(result);
       setState(() {
@@ -151,11 +156,11 @@ class _GameScreenState extends ConsumerState<GameScreen>
     });
   }
 
-  double _exitDistance(Board board, Arrow arrow) => switch (arrow.direction) {
-        Direction.right => (board.width - arrow.position.col).toDouble(),
-        Direction.left => (arrow.position.col + 1).toDouble(),
-        Direction.down => (board.height - arrow.position.row).toDouble(),
-        Direction.up => (arrow.position.row + 1).toDouble(),
+  double _exitDistance(Board board, Snake snake) => switch (snake.direction) {
+        Direction.right => (board.width - snake.head.col).toDouble(),
+        Direction.left => (snake.head.col + 1).toDouble(),
+        Direction.down => (board.height - snake.head.row).toDouble(),
+        Direction.up => (snake.head.row + 1).toDouble(),
       };
 
   void _maybeShowInterstitial() {
@@ -270,10 +275,11 @@ class _GameScreenState extends ConsumerState<GameScreen>
         final painter = BoardPainter(
           board: state.board,
           cellColor: AppPalette.surfaceHigh,
-          arrowColor: AppPalette.amber,
+          snakeColor: AppPalette.teal,
+          headAccent: AppPalette.amber,
           collisionColor: AppPalette.rose,
-          hintColor: AppPalette.teal,
-          slidingArrowId: _slidingArrowId,
+          hintColor: AppPalette.amber,
+          slidingSnakeId: _slidingSnakeId,
           slideTranslation: _slideBase * slideT,
           slidingOpacity: 1 - slideT,
           collisionCell: _collisionCell,

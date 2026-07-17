@@ -2,10 +2,10 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
-import '../../domain/entities/arrow.dart';
 import '../../domain/entities/board.dart';
 import '../../domain/entities/direction.dart';
 import '../../domain/entities/position.dart';
+import '../../domain/entities/snake.dart';
 import 'board_geometry.dart';
 
 /// Renders the whole board in a single [CustomPainter] — no widget per cell.
@@ -13,9 +13,10 @@ class BoardPainter extends CustomPainter {
   BoardPainter({
     required this.board,
     required this.cellColor,
-    required this.arrowColor,
+    required this.snakeColor,
+    required this.headAccent,
     required this.collisionColor,
-    this.slidingArrowId,
+    this.slidingSnakeId,
     this.slideTranslation = Offset.zero,
     this.slidingOpacity = 1.0,
     this.collisionCell,
@@ -27,10 +28,11 @@ class BoardPainter extends CustomPainter {
 
   final Board board;
   final Color cellColor;
-  final Color arrowColor;
+  final Color snakeColor;
+  final Color headAccent;
   final Color collisionColor;
 
-  final int? slidingArrowId;
+  final int? slidingSnakeId;
   final Offset slideTranslation;
   final double slidingOpacity;
   final Position? collisionCell;
@@ -49,13 +51,12 @@ class BoardPainter extends CustomPainter {
 
     _paintCells(canvas, geo);
 
-    for (final arrow in board.arrows) {
-      final isSliding = arrow.id == slidingArrowId;
-      // slideTranslation is expressed in cell units so it is size-independent.
+    for (final snake in board.snakes) {
+      final isSliding = snake.id == slidingSnakeId;
       final translation =
           isSliding ? slideTranslation * geo.cellSize : Offset.zero;
       final opacity = isSliding ? slidingOpacity : 1.0;
-      _paintArrow(canvas, geo, arrow, translation, opacity);
+      _paintSnake(canvas, geo, snake, translation, opacity);
     }
   }
 
@@ -85,34 +86,78 @@ class BoardPainter extends CustomPainter {
     }
   }
 
-  void _paintArrow(
+  void _paintSnake(
     Canvas canvas,
     BoardGeometry geo,
-    Arrow arrow,
+    Snake snake,
     Offset translation,
     double opacity,
   ) {
-    final center = geo.centerOf(arrow.position) + translation;
-    final extent = geo.cellSize * 0.30;
+    final alpha = opacity.clamp(0.0, 1.0);
+    final strokeWidth = geo.cellSize * 0.42;
 
-    final paint = Paint()
-      ..color = arrowColor.withValues(alpha: opacity.clamp(0.0, 1.0))
-      ..style = PaintingStyle.fill
+    final bodyPaint = Paint()
+      ..color = snakeColor.withValues(alpha: alpha)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = strokeWidth
+      ..strokeCap = StrokeCap.round
       ..strokeJoin = StrokeJoin.round;
+
+    final centers = [
+      for (final cell in snake.body) geo.centerOf(cell) + translation,
+    ];
+
+    if (centers.length == 1) {
+      canvas.drawCircle(centers.first, strokeWidth * 0.45, Paint()
+        ..color = snakeColor.withValues(alpha: alpha)
+        ..style = PaintingStyle.fill);
+    } else {
+      final path = Path()..moveTo(centers.first.dx, centers.first.dy);
+      for (var i = 1; i < centers.length; i++) {
+        path.lineTo(centers[i].dx, centers[i].dy);
+      }
+      canvas.drawPath(path, bodyPaint);
+    }
+
+    _paintHead(canvas, geo, snake, centers.first, alpha);
+  }
+
+  void _paintHead(
+    Canvas canvas,
+    BoardGeometry geo,
+    Snake snake,
+    Offset center,
+    double alpha,
+  ) {
+    final r = geo.cellSize * 0.28;
+    final fill = Paint()
+      ..color = snakeColor.withValues(alpha: alpha)
+      ..style = PaintingStyle.fill;
 
     canvas.save();
     canvas.translate(center.dx, center.dy);
-    canvas.rotate(_angleOf(arrow.direction));
+    canvas.rotate(_angleOf(snake.direction));
 
-    // A chevron pointing to the right (before rotation).
-    final path = Path()
-      ..moveTo(extent, 0)
-      ..lineTo(-extent * 0.7, -extent)
-      ..lineTo(-extent * 0.3, 0)
-      ..lineTo(-extent * 0.7, extent)
+    // Rounded head pointing right (pre-rotation).
+    final head = Path()
+      ..moveTo(r, 0)
+      ..quadraticBezierTo(r * 0.3, -r * 0.95, -r * 0.55, -r * 0.7)
+      ..quadraticBezierTo(-r * 0.9, 0, -r * 0.55, r * 0.7)
+      ..quadraticBezierTo(r * 0.3, r * 0.95, r, 0)
       ..close();
+    canvas.drawPath(head, fill);
 
-    canvas.drawPath(path, paint);
+    // Eyes — amber accent, original (not reference lavender).
+    final eye = Paint()
+      ..color = headAccent.withValues(alpha: alpha)
+      ..style = PaintingStyle.fill;
+    canvas.drawCircle(Offset(r * 0.15, -r * 0.32), r * 0.18, eye);
+    canvas.drawCircle(Offset(r * 0.15, r * 0.32), r * 0.18, eye);
+    final pupil = Paint()
+      ..color = const Color(0xFF14161C).withValues(alpha: alpha);
+    canvas.drawCircle(Offset(r * 0.22, -r * 0.32), r * 0.08, pupil);
+    canvas.drawCircle(Offset(r * 0.22, r * 0.32), r * 0.08, pupil);
+
     canvas.restore();
   }
 
@@ -126,7 +171,7 @@ class BoardPainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant BoardPainter old) =>
       old.board != board ||
-      old.slidingArrowId != slidingArrowId ||
+      old.slidingSnakeId != slidingSnakeId ||
       old.slideTranslation != slideTranslation ||
       old.slidingOpacity != slidingOpacity ||
       old.collisionCell != collisionCell ||

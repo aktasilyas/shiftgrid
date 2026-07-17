@@ -137,7 +137,7 @@ abstract class AppLocalizations {
   /// No description provided for @howToPlay.
   ///
   /// In en, this message translates to:
-  /// **'Tap an arrow to slide it out. Clear them all.'**
+  /// **'Tap a snake to let it glide out. Clear them all.'**
   String get howToPlay;
 
   /// No description provided for @newLevel.

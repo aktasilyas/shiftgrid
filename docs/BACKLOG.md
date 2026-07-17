@@ -3,16 +3,11 @@
 Yapılamayan veya sonraya bırakılan işler burada; placeholder/TODO yerine buraya yaz.
 
 ## Açık
-- [ ] **Özgün mekanik seçimi** — FAZ 4'te en az 1 özgün mekanik belirle ve DECISIONS.md'ye yaz
-      (aday: dönen ok, bonus hücre, zincir-kombo, zamanlı mod).
-- [ ] **hive_generator sürüm yükseltmesi** — analyzer 6.x pin'i, codegen ihtiyacı doğduğunda gözden geçir.
 - [ ] **Branch protection (Pro gerekli)** — private repoda classic protection ve rulesets 403
       veriyor (bkz. DECISIONS 0006). GitHub Pro'ya geçilince veya repo public olunca etkinleştir.
-- [ ] **Store/marketing nihai ad** — Legal Gate (§6) sonrası kesinleştir.
-- [ ] **Yerel APK derleme** — geliştirme makinesine portable JDK 17 + `flutter config --jdk-dir`
-      (şu an APK yalnızca CI'da derleniyor, bkz. DECISIONS #0008).
-- [ ] **Lisanslı/özgün ses efektleri** — `audioplayers` ile escape/collide/win sfx; lisanslar
-      `docs/LICENSES.md`'ye (şu an yalnızca SystemSound + haptik, bkz. DECISIONS #0009).
+- [ ] **Lisanslı/özgün ses efektleri** — `audioplayers` ile escape/hiss/win sfx
+      (özellikle gerçek tıslama); lisanslar `docs/LICENSES.md`'ye
+      (şu an SystemSound + haptik stand-in, bkz. DECISIONS #0009 / #0014).
 - [ ] **Widget/entegrasyon testleri** — menü→seviye seçim→oyun akışı ve overlay'ler için.
 - [ ] **Gerçek AdMob ID'leri** — `AdConfig` + manifest `APPLICATION_ID` test ID'leri yayından önce
       gerçek onaylı birimlerle değiştir; `AdConfig.useTestIds=false` (bkz. DECISIONS #0012).
@@ -22,4 +17,8 @@ Yapılamayan veya sonraya bırakılan işler burada; placeholder/TODO yerine bur
 - [ ] **iOS reklam kimliği** — iOS eklenirse `Info.plist` `GADApplicationIdentifier` + SKAdNetwork.
 
 ## Kapandı
-- (henüz yok)
+- [x] **Özgün mekanik seçimi** — Zincir-kombo + günlük seri seçildi ve DECISIONS #0011'e yazıldı.
+- [x] **Store/marketing nihai ad** — ShiftGrid olarak kesinleşti.
+- [x] **hive_generator sürüm yükseltmesi** — Codegen kullanılmadığı için `hive_generator`/`build_runner`
+      kaldırıldı; Flutter 3.41.3 bağımlılık çözümü temiz.
+- [x] **Yerel APK derleme** — JDK 21 ile API 36 emülatörde debug APK derlendi ve çalıştırıldı.

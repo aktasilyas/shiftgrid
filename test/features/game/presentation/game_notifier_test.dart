@@ -17,7 +17,7 @@ void main() {
       final state = container.read(gameProvider);
       expect(state.status, GameStatus.playing);
       expect(state.lives, state.maxLives);
-      expect(state.board.arrowCount, greaterThan(0));
+      expect(state.board.snakeCount, greaterThan(0));
     });
 
     test('playing the guaranteed solution clears the board -> won', () {
@@ -43,27 +43,27 @@ void main() {
       final board = container.read(gameProvider).board;
 
       Position? blocked;
-      for (final arrow in board.arrows) {
-        if (notifier.peek(arrow.position).didCollide) {
-          blocked = arrow.position;
+      for (final snake in board.snakes) {
+        if (notifier.peek(snake.head).didCollide) {
+          blocked = snake.head;
           break;
         }
       }
-      expect(blocked, isNotNull, reason: 'expected at least one blocked arrow');
+      expect(blocked, isNotNull, reason: 'expected at least one blocked snake');
 
       final result = notifier.peek(blocked!);
       notifier.applyResult(result);
 
       final state = container.read(gameProvider);
       expect(state.lives, state.maxLives - 1);
-      expect(state.board.arrowCount, board.arrowCount);
+      expect(state.board.snakeCount, board.snakeCount);
       expect(state.status, GameStatus.playing);
     });
 
     test('reset restores full lives and the same level', () {
       final container = makeContainer();
       final notifier = container.read(gameProvider.notifier);
-      final startCount = container.read(gameProvider).board.arrowCount;
+      final startCount = container.read(gameProvider).board.snakeCount;
 
       final first = notifier.solution.first;
       notifier.applyResult(notifier.peek(first));
@@ -72,7 +72,7 @@ void main() {
       final state = container.read(gameProvider);
       expect(state.lives, state.maxLives);
       expect(state.moves, 0);
-      expect(state.board.arrowCount, startCount);
+      expect(state.board.snakeCount, startCount);
     });
 
     test('newGame loads a different level and stays playable', () {
@@ -83,22 +83,22 @@ void main() {
       final state = container.read(gameProvider);
 
       expect(state.status, GameStatus.playing);
-      expect(state.board.arrowCount, greaterThan(0));
-      expect(notifier.solution.length, state.board.arrowCount);
+      expect(state.board.snakeCount, greaterThan(0));
+      expect(notifier.solution.length, state.board.snakeCount);
     });
 
     test('undo reverts the last move', () {
       final container = makeContainer();
       final notifier = container.read(gameProvider.notifier);
-      final startCount = container.read(gameProvider).board.arrowCount;
+      final startCount = container.read(gameProvider).board.snakeCount;
 
       notifier.applyResult(notifier.peek(notifier.solution.first));
       expect(container.read(gameProvider).moves, 1);
-      expect(container.read(gameProvider).board.arrowCount, startCount - 1);
+      expect(container.read(gameProvider).board.snakeCount, startCount - 1);
 
       notifier.undo();
       expect(container.read(gameProvider).moves, 0);
-      expect(container.read(gameProvider).board.arrowCount, startCount);
+      expect(container.read(gameProvider).board.snakeCount, startCount);
     });
 
     test('undo with no history is a no-op', () {
@@ -108,11 +108,10 @@ void main() {
       expect(container.read(gameProvider).moves, 0);
     });
 
-    test('hint always returns a currently-escaping arrow', () {
+    test('hint always returns a currently-escaping snake head', () {
       final container = makeContainer();
       final notifier = container.read(gameProvider.notifier);
 
-      // Play halfway using the guaranteed solution, checking the hint each step.
       final steps = notifier.solution.length ~/ 2;
       for (var i = 0; i < steps; i++) {
         final hint = notifier.hint();
@@ -149,15 +148,13 @@ void main() {
       final notifier = container.read(gameProvider.notifier);
       final board = container.read(gameProvider).board;
 
-      // Lose a life on a blocked shot.
-      final blocked = board.arrows
-          .map((a) => a.position)
+      final blocked = board.snakes
+          .map((s) => s.head)
           .firstWhere((p) => notifier.peek(p).didCollide);
       notifier.applyResult(notifier.peek(blocked));
       expect(container.read(gameProvider).lives,
           container.read(gameProvider).maxLives - 1);
 
-      // Chain enough escapes to hit the reward threshold.
       for (var i = 0; i < GameNotifier.comboRewardThreshold; i++) {
         notifier.applyResult(notifier.peek(notifier.hint()!));
       }

@@ -27,7 +27,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get youLost => 'Out of lives';
 
   @override
-  String get howToPlay => 'Tap an arrow to slide it out. Clear them all.';
+  String get howToPlay => 'Tap a snake to let it glide out. Clear them all.';
 
   @override
   String get newLevel => 'New level';
