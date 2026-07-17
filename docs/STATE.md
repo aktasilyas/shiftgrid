@@ -4,11 +4,11 @@
 
 | Alan | Değer |
 |---|---|
-| Faz | 6 — Yayına hazırlık |
-| Durum | GATE 3 bekleniyor (PR açık: phase-6-release) |
+| Faz | 7 — Kapalı test ve yayın (kod tarafı tamam) |
+| Durum | Kod tamamlandı; Play Console adımları kullanıcıda (RELEASE.md §9-10) |
 | Kod adı | ShiftGrid (paket: `com.aktasilyas.shiftgrid`) |
-| Son commit | phase-6 release prep (icon/splash/signing/R8/docs) |
-| Aktif branch | `phase-6-release` |
+| Son commit | phase-7 launch (CHANGELOG + kapalı test talimatları) |
+| Aktif branch | `phase-7-launch` |
 
 ## Ortam
 - Flutter 3.38.5 · Dart 3.10.4 (Windows)
@@ -38,10 +38,13 @@
   56 test yeşil, analyze temiz. (PR #6 merged)
 - FAZ 6: Özgün ikon + adaptive launcher icons + native splash; release R8/shrink + proguard-rules;
   imzalama fallback (key.properties yoksa debug); AdConfig --dart-define; docs/RELEASE.md (store
-  metni TR/EN, ASO, Data safety, IARC, Play adımları) + docs/PRIVACY.md. LEGAL 1-6,8 ✅ (7 cihaz bekler).
+  metni TR/EN, ASO, Data safety, IARC, Play adımları) + docs/PRIVACY.md. LEGAL 1-6,8 ✅. (PR #7 merged)
+- FAZ 7: CHANGELOG.md (1.0.0); RELEASE.md §10 kapalı test tıkla-geç (12 testçi/14 gün, geri bildirim
+  döngüsü, prod erişim, sürümleme). Kod tarafı TAMAM.
 
-## Sıradaki
-- GATE 3 onayı sonrası FAZ 7 — Kapalı test ve yayın (min 12 testçi/14 gün; Play Console kullanıcıda).
+## Proje durumu: KOD TAMAMLANDI
+Kalan tek iş kullanıcının Play Console'da manuel yapacağı adımlar (RELEASE.md §9-10) ve yayın öncesi
+zorunlular (gerçek AdMob ID, remove_ads ürünü, privacy URL, UMP, ekran görüntüleri).
 
 ## Açık riskler / notlar
 - `hive_generator` analyzer 6.x'e pinliyor; ileride codegen ihtiyacı olursa sürüm çakışması izlenecek.
