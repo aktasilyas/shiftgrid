@@ -96,3 +96,13 @@ Servis init yalnızca Android/iOS'ta (test/masaüstünde atlanır).
 **Gerekçe:** BOOTSTRAP §5 — gerçek ID yok, mağaza reddi/politika riski yok. Saf policy + entitlement
 test edilebilir; platform SDK'ları ince sarmalayıcıların arkasında. Gerçek ID'ler, ürün konfigürasyonu
 ve UMP/rıza formu FAZ 6/yayına bırakıldı (BACKLOG).
+
+## 0013 — Yayına hazırlık: özgün ikon, imzalama fallback, R8, dart-define
+**Tarih:** 2026-07-17
+**Karar:** Özgün ikon (`assets/app_icon.png`) + `flutter_launcher_icons` (adaptive) ve
+`flutter_native_splash` (bg `#14161C`). Release'te R8/`isMinifyEnabled`+`isShrinkResources` +
+`proguard-rules.pro` (ads/billing/play-core keep). İmzalama: `android/key.properties` varsa release
+anahtarı, yoksa **debug'a düşer** (CI/dev imzasız derlensin). Gerçek reklam ID'leri `--dart-define`
+ile (`AdConfig` test fallback); commit edilmez. Store metinleri/Data safety/IARC/Privacy → `docs/`.
+**Gerekçe:** BOOTSTRAP §5 (gerçek ID `--dart-define`, commit yok) + §6 (yayın paketi). Fallback
+imzalama CI'ı bozmadan gerçek imzayı mümkün kılar; R8 boyut/performans; ikon Legal §6 (özgünlük).

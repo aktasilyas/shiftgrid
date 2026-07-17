@@ -1,0 +1,8 @@
+# Copy to android/key.properties and fill in to sign release builds.
+# This file (the real key.properties) is git-ignored — never commit secrets.
+# With Play App Signing you only manage the upload key here.
+storePassword=CHANGE_ME
+keyPassword=CHANGE_ME
+keyAlias=upload
+# Path to your upload keystore (absolute, or relative to android/app).
+storeFile=/absolute/path/to/upload-keystore.jks

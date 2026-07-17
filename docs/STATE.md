@@ -4,11 +4,11 @@
 
 | Alan | Değer |
 |---|---|
-| Faz | 5 — Monetizasyon |
-| Durum | PR açık (phase-5-monetization), CI bekleniyor |
+| Faz | 6 — Yayına hazırlık |
+| Durum | GATE 3 bekleniyor (PR açık: phase-6-release) |
 | Kod adı | ShiftGrid (paket: `com.aktasilyas.shiftgrid`) |
-| Son commit | phase-5 monetization (test ads + IAP skeleton) |
-| Aktif branch | `phase-5-monetization` |
+| Son commit | phase-6 release prep (icon/splash/signing/R8/docs) |
+| Aktif branch | `phase-6-release` |
 
 ## Ortam
 - Flutter 3.38.5 · Dart 3.10.4 (Windows)
@@ -35,10 +35,13 @@
 - FAZ 5: Monetizasyon — AdMob YALNIZCA test ID'leri (banner/interstitial/rewarded); interstitial
   cadence (AdGatePolicy, saf+test); rewarded ile "can için reklam izle" revive; IAP iskeleti
   (remove_ads non-consumable) + entitlement (ProgressStore); ayarlarda reklam kaldır/geri yükle.
-  56 test yeşil, analyze temiz.
+  56 test yeşil, analyze temiz. (PR #6 merged)
+- FAZ 6: Özgün ikon + adaptive launcher icons + native splash; release R8/shrink + proguard-rules;
+  imzalama fallback (key.properties yoksa debug); AdConfig --dart-define; docs/RELEASE.md (store
+  metni TR/EN, ASO, Data safety, IARC, Play adımları) + docs/PRIVACY.md. LEGAL 1-6,8 ✅ (7 cihaz bekler).
 
 ## Sıradaki
-- FAZ 6 — Mağaza hazırlığı (özgün ikon, ekran görüntüleri, store metinleri) + gerçek AdMob/IAP ID'leri.
+- GATE 3 onayı sonrası FAZ 7 — Kapalı test ve yayın (min 12 testçi/14 gün; Play Console kullanıcıda).
 
 ## Açık riskler / notlar
 - `hive_generator` analyzer 6.x'e pinliyor; ileride codegen ihtiyacı olursa sürüm çakışması izlenecek.
