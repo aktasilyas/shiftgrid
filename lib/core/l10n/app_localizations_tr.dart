@@ -27,7 +27,8 @@ class AppLocalizationsTr extends AppLocalizations {
   String get youLost => 'Canın bitti';
 
   @override
-  String get howToPlay => 'Bir oku dokunarak dışarı kaydır. Hepsini temizle.';
+  String get howToPlay =>
+      'Bir yılana dokun, yolu açıksa süzülüp çıksın. Hepsini temizle.';
 
   @override
   String get newLevel => 'Yeni bölüm';

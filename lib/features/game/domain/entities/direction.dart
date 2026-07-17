@@ -1,4 +1,4 @@
-/// The four cardinal directions an arrow can point / slide toward.
+/// The four cardinal directions a snake head can face / glide toward.
 ///
 /// Grid convention: [Position.row] grows downward, [Position.col] grows to the
 /// right. Each direction exposes a unit step as ([dCol], [dRow]).
@@ -13,7 +13,7 @@ enum Direction {
   final int dCol;
   final int dRow;
 
-  /// The direction rotated 90° clockwise. Useful for rotating-arrow mechanics.
+  /// The direction rotated 90° clockwise.
   Direction get clockwise => switch (this) {
         Direction.up => Direction.right,
         Direction.right => Direction.down,

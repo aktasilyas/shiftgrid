@@ -9,7 +9,7 @@
   "movesLabel": "Moves",
   "youWon": "Board cleared!",
   "youLost": "Out of lives",
-  "howToPlay": "Tap an arrow to slide it out. Clear them all.",
+  "howToPlay": "Tap a snake to let it glide out. Clear them all.",
   "newLevel": "New level",
   "settings": "Settings",
   "soundLabel": "Sound & haptics",

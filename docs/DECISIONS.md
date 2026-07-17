@@ -106,3 +106,15 @@ anahtarı, yoksa **debug'a düşer** (CI/dev imzasız derlensin). Gerçek reklam
 ile (`AdConfig` test fallback); commit edilmez. Store metinleri/Data safety/IARC/Privacy → `docs/`.
 **Gerekçe:** BOOTSTRAP §5 (gerçek ID `--dart-define`, commit yok) + §6 (yayın paketi). Fallback
 imzalama CI'ı bozmadan gerçek imzayı mümkün kılar; R8 boyut/performans; ikon Legal §6 (özgünlük).
+
+## 0014 — Tek hücreli Ok → çok hücreli Yılan (Snake)
+**Tarih:** 2026-07-17
+**Karar:** Çekirdek varlık `Arrow` yerine `Snake` (head-first `List<Position> body` + yön).
+Board occupancy çok hücreli; `rayEscapes`/`tryFire` baş hücresinden çalışır, gövdeye dokunmak
+tüm yılanı serbest bırakır. Üreteç ters-üretimle değişken uzunlukta (min–max) kıvrımlı yılanlar
+yerleştirir; kaçış ışınına kendi gövdesini koymaz. Görsel: teal gövde + amber gözlü baş
+(referans lavanta polyline değil). Çarpışmada `SoundEffect.hiss` (şimdilik SystemSound.alert
+stand-in; lisanslı tıslama BACKLOG).
+**Gerekçe:** Tek hücreli aynı boyutta oklar oyunu fazla kolaylaştırıyordu; iç içe değişken
+uzunluk zorluk ve özgün kimlik sağlar. Yılan görseli Legal Gate (§6) için referanstan uzaklaşır.
+Çözülebilirlik invariantı (ters-üretim + property test) korunur.

@@ -37,10 +37,10 @@ flutter build appbundle --release \
 
 ### English
 - **Title (≤30):** ShiftGrid
-- **Short description (≤80):** Slide the arrows off the grid in this minimalist logic puzzle.
+- **Short description (≤80):** Release the snakes — clear the grid in this logic puzzle.
 - **Full description:**
-  > ShiftGrid is a clean, minimalist logic puzzle. Every level is a grid of arrows —
-  > tap one to slide it out, but only if its path is clear. Plan your order, chain
+  > ShiftGrid is a clean, minimalist logic puzzle. Every level is a tangle of snakes —
+  > tap one to let it glide out, but only if its path is clear. Plan your order, chain
   > escapes to build a combo and win back lives, and clear the whole board.
   >
   > • 120 handcrafted-by-seed levels across Easy, Medium and Hard
@@ -53,10 +53,10 @@ flutter build appbundle --release \
 
 ### Türkçe
 - **Başlık (≤30):** ShiftGrid
-- **Kısa açıklama (≤80):** Okları ızgaradan kaydırıp temizle — minimalist mantık bulmacası.
+- **Kısa açıklama (≤80):** Yılanları serbest bırak, ızgarayı temizle — mantık bulmacası.
 - **Tam açıklama:**
-  > ShiftGrid sade, minimalist bir mantık bulmacasıdır. Her bölüm bir ok ızgarasıdır —
-  > yolu açıksa dokunup dışarı kaydır. Sıranı planla, ardışık çıkışlarla kombo yap ve
+  > ShiftGrid sade, minimalist bir mantık bulmacasıdır. Her bölüm iç içe yılanlarla doludur —
+  > yolu açıksa dokunup süzülerek çıksın. Sıranı planla, ardışık çıkışlarla kombo yap ve
   > can kazan, tüm tahtayı temizle.
   >
   > • Kolay/Orta/Zor'da 120 bölüm
@@ -68,8 +68,8 @@ flutter build appbundle --release \
   > Sayaç yok, karmaşa yok — sadece sen ve ızgara.
 
 ## 5. ASO anahtar kelimeler
-- **EN:** puzzle, logic puzzle, brain, arrows, grid, minimalist, offline, daily puzzle, casual
-- **TR:** bulmaca, mantık, zeka oyunu, ok, ızgara, minimalist, çevrimdışı, günlük bulmaca
+- **EN:** puzzle, logic puzzle, brain, snake, grid, minimalist, offline, daily puzzle, casual
+- **TR:** bulmaca, mantık, zeka oyunu, yılan, ızgara, minimalist, çevrimdışı, günlük bulmaca
 
 ## 6. Ekran görüntüleri (DURUM: bekliyor — cihaz/emülatör gerekir)
 Kendi build'imizden (Legal §7). Emülatör/cihazda:

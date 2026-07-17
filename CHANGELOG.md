@@ -9,10 +9,11 @@ versioning is `marketingVersion+buildNumber` (pubspec `version:`).
 First release candidate — feature complete, entering closed testing.
 
 ### Added
-- Core mechanic: tap an arrow to slide it off the grid when its path is clear;
-  collisions cost a life (pure-Dart domain: `Board`, `tryFire`, `rayEscapes`).
-- Reverse-generation level generator — every level is guaranteed solvable
-  (1000-seed property test per difficulty).
+- Core mechanic: tap a multi-cell snake to let it glide off the grid when its
+  path is clear; collisions hiss and cost a life (pure-Dart domain: `Snake`,
+  `Board`, `tryFire`, `rayEscapes`).
+- Reverse-generation level generator — variable-length intertwined snakes,
+  every level guaranteed solvable (1000-seed property test per difficulty).
 - 120 levels (40 each across Easy / Medium / Hard) with sequential unlock and
   best-move tracking (Hive).
 - Original chain-combo mechanic: consecutive escapes refund a life every 4th;

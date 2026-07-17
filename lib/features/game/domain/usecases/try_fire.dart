@@ -1,17 +1,17 @@
-import '../entities/arrow.dart';
 import '../entities/board.dart';
 import '../entities/position.dart';
+import '../entities/snake.dart';
 import 'ray_escapes.dart';
 
-/// The outcome of tapping a cell to fire an arrow.
+/// The outcome of tapping a cell to release a snake.
 enum FireOutcome {
-  /// The tapped cell had no arrow.
-  noArrow,
+  /// The tapped cell had no snake.
+  noSnake,
 
-  /// The arrow escaped; [FireResult.board] has it removed.
+  /// The snake escaped; [FireResult.board] has it removed.
   escaped,
 
-  /// The arrow was blocked; [FireResult.collisionAt] holds the obstacle.
+  /// The snake was blocked; [FireResult.collisionAt] holds the obstacle.
   collided,
 }
 
@@ -20,17 +20,17 @@ class FireResult {
   const FireResult({
     required this.outcome,
     required this.board,
-    this.firedArrow,
+    this.firedSnake,
     this.collisionAt,
   });
 
   final FireOutcome outcome;
 
-  /// The resulting board (unchanged unless the arrow escaped).
+  /// The resulting board (unchanged unless the snake escaped).
   final Board board;
 
-  /// The arrow that was fired, if any.
-  final Arrow? firedArrow;
+  /// The snake that was fired, if any.
+  final Snake? firedSnake;
 
   /// The first obstacle position when [outcome] is [FireOutcome.collided].
   final Position? collisionAt;
@@ -39,28 +39,28 @@ class FireResult {
   bool get didCollide => outcome == FireOutcome.collided;
 }
 
-/// Attempts to fire the arrow at [position].
+/// Attempts to release the snake occupying [position].
 ///
 /// Pure function: never mutates [board]. Life loss / scoring are decided by the
-/// caller (e.g. the presentation notifier) based on the returned outcome.
+/// caller based on the returned outcome. Tapping any body cell fires the snake.
 FireResult tryFire(Board board, Position position) {
-  final arrow = board.arrowAt(position);
-  if (arrow == null) {
-    return FireResult(outcome: FireOutcome.noArrow, board: board);
+  final snake = board.snakeAt(position);
+  if (snake == null) {
+    return FireResult(outcome: FireOutcome.noSnake, board: board);
   }
 
-  if (rayEscapes(board, arrow)) {
+  if (rayEscapes(board, snake)) {
     return FireResult(
       outcome: FireOutcome.escaped,
-      board: board.removeAt(position),
-      firedArrow: arrow,
+      board: board.removeSnake(snake),
+      firedSnake: snake,
     );
   }
 
   return FireResult(
     outcome: FireOutcome.collided,
     board: board,
-    firedArrow: arrow,
-    collisionAt: firstObstacle(board, arrow),
+    firedSnake: snake,
+    collisionAt: firstObstacle(board, snake),
   );
 }

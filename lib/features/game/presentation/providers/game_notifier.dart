@@ -34,15 +34,15 @@ class GameNotifier extends Notifier<GameState> {
 
   FireResult peek(Position position) => tryFire(state.board, position);
 
-  /// A guaranteed-safe next move: the arrow with the highest placement id that
+  /// A guaranteed-safe next move: the snake with the highest placement id that
   /// remains always has a clear shot (see the reverse-generation invariant).
   Position? hint() {
     Position? best;
     var bestId = -1;
-    for (final arrow in state.board.arrows) {
-      if (arrow.id > bestId) {
-        bestId = arrow.id;
-        best = arrow.position;
+    for (final snake in state.board.snakes) {
+      if (snake.id > bestId) {
+        bestId = snake.id;
+        best = snake.head;
       }
     }
     return best;
@@ -51,7 +51,7 @@ class GameNotifier extends Notifier<GameState> {
   void applyResult(FireResult result) {
     if (!state.isPlaying) return;
     switch (result.outcome) {
-      case FireOutcome.noArrow:
+      case FireOutcome.noSnake:
         return;
       case FireOutcome.escaped:
         _history.add(state);
