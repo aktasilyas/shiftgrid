@@ -1,6 +1,6 @@
 # RELEASE — Yayına hazırlık (GATE 3)
 
-Uygulama: **Snake Shift** · Paket: `com.aktasilyas.shiftgrid` · Sürüm: `1.1.0+2`
+Uygulama: **Snake Shift** · Paket: `com.aktasilyas.snakeshift` · Sürüm: `1.1.0+2`
 
 ## 1. Build
 

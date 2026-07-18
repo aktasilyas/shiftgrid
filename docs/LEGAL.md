@@ -9,7 +9,7 @@ korunur. Aşağıdaki maddeler mevcut duruma göre işaretlenmiştir.
 | 2 | İkon tamamen özgün | ✅ | Özgün ikon üretildi (`assets/app_icon.png`, `flutter_launcher_icons`); LICENSES.md |
 | 3 | Renk paleti ve art stili özgün | ✅ | `AppPalette` (DECISIONS #0002); art = özgün geometrik CustomPainter |
 | 4 | Store açıklaması sıfırdan yazıldı | ✅ | `docs/RELEASE.md` §4 (TR/EN, özgün metin) |
-| 5 | Geliştirici adı hiçbir markayı çağrıştırmıyor | ✅ | `com.aktasilyas.shiftgrid` |
+| 5 | Geliştirici adı hiçbir markayı çağrıştırmıyor | ✅ | `com.aktasilyas.snakeshift` |
 | 6 | En az 1 özgün mekanik | ✅ | Zincir-kombo (can iadesi) + günlük görev/seri (DECISIONS #0011) |
 | 7 | Ekran görüntüleri/video kendi build'imizden | ⏳ | Cihaz/emülatör gerekli; RELEASE.md §6 talimatı (kendi build'imizden) |
 | 8 | Hiçbir asset lisanssız alınmadı | ✅ | Üçüncü taraf ses/font/görsel yok; yalnızca SystemSound + haptik (DECISIONS #0009). `docs/LICENSES.md` boş |

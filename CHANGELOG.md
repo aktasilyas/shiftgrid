@@ -26,8 +26,9 @@ Rebrand to **Snake Shift** + the "real snakes" overhaul.
 - Collided snakes flush red for the shake duration.
 - Pinch-to-zoom (up to 4×) with pan; snake detail level adapts to the
   on-screen cell size so zooming restores full detail on dense boards.
-- New snake launcher icon + splash; app renamed to **Snake Shift**
-  (package id unchanged: `com.aktasilyas.shiftgrid`).
+- New snake launcher icon + splash; app renamed to **Snake Shift** with a
+  matching package id (`com.aktasilyas.snakeshift` — changed before the
+  first Play upload, while it was still free to change).
 
 ## [1.0.0+1] — 2026-07-17
 
