@@ -1,6 +1,6 @@
 {
   "@@locale": "en",
-  "appTitle": "ShiftGrid",
+  "appTitle": "Snake Shift",
   "@appTitle": {
     "description": "The application title."
   },
@@ -16,9 +16,11 @@
   "languageLabel": "Language",
   "systemLanguage": "System",
   "chooseDifficulty": "Choose a difficulty",
+  "levels": "Levels",
   "difficultyEasy": "Easy",
   "difficultyMedium": "Medium",
   "difficultyHard": "Hard",
+  "difficultyVeryHard": "Very Hard",
   "undo": "Undo",
   "hint": "Hint",
   "nextLevel": "Next",

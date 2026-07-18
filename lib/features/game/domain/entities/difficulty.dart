@@ -6,7 +6,7 @@ class DifficultyProfile {
     required this.minLength,
     required this.maxLength,
     required this.maxOpenRatio,
-    this.maxAttempts = 64,
+    this.maxAttempts = 96,
   });
 
   /// Side length of the square board.
@@ -32,29 +32,42 @@ class DifficultyProfile {
 enum Difficulty {
   easy,
   medium,
-  hard;
+  hard,
+  veryHard;
 
   DifficultyProfile get profile => switch (this) {
         Difficulty.easy => const DifficultyProfile(
-            size: 5,
-            snakeCount: 5,
+            size: 6,
+            snakeCount: 6,
             minLength: 2,
-            maxLength: 4,
-            maxOpenRatio: 0.55,
+            maxLength: 5,
+            maxOpenRatio: 0.50,
           ),
         Difficulty.medium => const DifficultyProfile(
-            size: 6,
-            snakeCount: 7,
-            minLength: 2,
-            maxLength: 6,
-            maxOpenRatio: 0.45,
-          ),
-        Difficulty.hard => const DifficultyProfile(
-            size: 7,
-            snakeCount: 9,
+            size: 9,
+            snakeCount: 13,
             minLength: 3,
             maxLength: 8,
             maxOpenRatio: 0.40,
+          ),
+        Difficulty.hard => const DifficultyProfile(
+            size: 13,
+            snakeCount: 26,
+            minLength: 3,
+            maxLength: 12,
+            maxOpenRatio: 0.32,
+            maxAttempts: 48,
+          ),
+        // A wall of snakes: hundreds of short bodies interlocked on a huge
+        // grid. Short max length packs far more snakes into the board, which
+        // is what makes it brutal — nearly every escape ray is blocked.
+        Difficulty.veryHard => const DifficultyProfile(
+            size: 36,
+            snakeCount: 300,
+            minLength: 3,
+            maxLength: 4,
+            maxOpenRatio: 0.35,
+            maxAttempts: 3,
           ),
       };
 }

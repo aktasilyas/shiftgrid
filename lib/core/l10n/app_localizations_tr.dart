@@ -9,7 +9,7 @@ class AppLocalizationsTr extends AppLocalizations {
   AppLocalizationsTr([String locale = 'tr']) : super(locale);
 
   @override
-  String get appTitle => 'ShiftGrid';
+  String get appTitle => 'Snake Shift';
 
   @override
   String get play => 'Oyna';
@@ -49,6 +49,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get chooseDifficulty => 'Zorluk seç';
 
   @override
+  String get levels => 'Bölümler';
+
+  @override
   String get difficultyEasy => 'Kolay';
 
   @override
@@ -56,6 +59,9 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get difficultyHard => 'Zor';
+
+  @override
+  String get difficultyVeryHard => 'Çok Zor';
 
   @override
   String get undo => 'Geri al';

@@ -101,7 +101,7 @@ abstract class AppLocalizations {
   /// The application title.
   ///
   /// In en, this message translates to:
-  /// **'ShiftGrid'**
+  /// **'Snake Shift'**
   String get appTitle;
 
   /// No description provided for @play.
@@ -176,6 +176,12 @@ abstract class AppLocalizations {
   /// **'Choose a difficulty'**
   String get chooseDifficulty;
 
+  /// No description provided for @levels.
+  ///
+  /// In en, this message translates to:
+  /// **'Levels'**
+  String get levels;
+
   /// No description provided for @difficultyEasy.
   ///
   /// In en, this message translates to:
@@ -193,6 +199,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Hard'**
   String get difficultyHard;
+
+  /// No description provided for @difficultyVeryHard.
+  ///
+  /// In en, this message translates to:
+  /// **'Very Hard'**
+  String get difficultyVeryHard;
 
   /// No description provided for @undo.
   ///

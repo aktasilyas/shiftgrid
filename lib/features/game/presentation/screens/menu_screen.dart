@@ -7,8 +7,9 @@ import '../../../../core/di/providers.dart';
 import '../../../../core/l10n/app_localizations.dart';
 import '../../../../core/theme/app_palette.dart';
 import '../../domain/entities/difficulty.dart';
+import '../../domain/repositories/progress_repository.dart';
 import '../../domain/usecases/daily_challenge.dart';
-import '../widgets/difficulty_label.dart';
+import '../../domain/usecases/level_progression.dart';
 import 'game_screen.dart';
 import 'level_select_screen.dart';
 import 'settings_screen.dart';
@@ -59,35 +60,35 @@ class MenuScreen extends ConsumerWidget {
                     ?.copyWith(color: AppPalette.textMuted),
               ).animate().fadeIn(delay: 200.ms, duration: 500.ms),
               const SizedBox(height: 40),
-              Text(
-                l10n.chooseDifficulty,
-                textAlign: TextAlign.center,
-                style: theme.textTheme.titleMedium
-                    ?.copyWith(color: AppPalette.textMuted),
-              ),
-              const SizedBox(height: 16),
-              for (final (i, difficulty) in Difficulty.values.indexed)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 12),
-                  child: FilledButton(
-                    onPressed: () => Navigator.of(context).push(
-                      MaterialPageRoute<void>(
-                        builder: (_) =>
-                            LevelSelectScreen(difficulty: difficulty),
+              // No difficulty picker: the ladder ramps up on its own as the
+              // player progresses (see level_progression.dart).
+              FilledButton(
+                onPressed: () => Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (_) => GameScreen.forLevel(
+                      _nextUncompletedLevel(
+                        ref.read(progressRepositoryProvider),
                       ),
                     ),
-                    style: FilledButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                    ),
-                    child: Text(
-                      difficultyLabel(l10n, difficulty),
-                      style: theme.textTheme.titleMedium,
-                    ),
                   ),
-                )
-                    .animate()
-                    .fadeIn(delay: (300 + i * 100).ms)
-                    .slideX(begin: 0.2, end: 0),
+                ),
+                style: FilledButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                ),
+                child: Text(l10n.play, style: theme.textTheme.titleMedium),
+              ).animate().fadeIn(delay: 300.ms).slideX(begin: 0.2, end: 0),
+              const SizedBox(height: 12),
+              OutlinedButton(
+                onPressed: () => Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (_) => const LevelSelectScreen(),
+                  ),
+                ),
+                style: OutlinedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                ),
+                child: Text(l10n.levels, style: theme.textTheme.titleMedium),
+              ).animate().fadeIn(delay: 400.ms).slideX(begin: 0.2, end: 0),
               const SizedBox(height: 8),
               _DailyButton(),
             ],
@@ -97,6 +98,16 @@ class MenuScreen extends ConsumerWidget {
       bottomNavigationBar: const SafeArea(child: BannerAdWidget()),
     );
   }
+}
+
+/// First unfinished rung of the ladder (or the last level when all done).
+int _nextUncompletedLevel(ProgressRepository progress) {
+  for (var level = 1; level <= totalLevels; level++) {
+    if (!progress.isCompleted(difficultyForLevel(level), seedForLevel(level))) {
+      return level;
+    }
+  }
+  return totalLevels;
 }
 
 class _DailyButton extends ConsumerWidget {
