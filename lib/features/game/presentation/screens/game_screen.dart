@@ -6,7 +6,6 @@ import 'package:flutter_animate/flutter_animate.dart' hide Direction;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/audio/sound_controller.dart';
-import '../../../../core/constants/game_constants.dart';
 import '../../../../core/di/providers.dart';
 import '../../../../core/l10n/app_localizations.dart';
 import '../../../../core/theme/app_palette.dart';
@@ -16,6 +15,7 @@ import '../../domain/entities/direction.dart';
 import '../../domain/entities/position.dart';
 import '../../domain/entities/snake.dart';
 import '../../domain/usecases/daily_challenge.dart';
+import '../../domain/usecases/level_progression.dart';
 import '../../domain/usecases/try_fire.dart';
 import '../painters/board_geometry.dart';
 import '../painters/board_painter.dart';
@@ -27,12 +27,25 @@ class GameScreen extends ConsumerStatefulWidget {
   const GameScreen({
     required this.seed,
     required this.difficulty,
+    this.level,
     this.isDaily = false,
     super.key,
   });
 
+  /// Opens a level on the unified ladder; difficulty is derived from it.
+  GameScreen.forLevel(int level, {Key? key})
+      : this(
+          seed: seedForLevel(level),
+          difficulty: difficultyForLevel(level),
+          level: level,
+          key: key,
+        );
+
   final int seed;
   final Difficulty difficulty;
+
+  /// Global ladder position (1..[totalLevels]); null for the daily challenge.
+  final int? level;
   final bool isDaily;
 
   @override
@@ -41,28 +54,43 @@ class GameScreen extends ConsumerStatefulWidget {
 
 class _GameScreenState extends ConsumerState<GameScreen>
     with TickerProviderStateMixin {
-  late final AnimationController _slide = AnimationController(
-    vsync: this,
-    duration: const Duration(milliseconds: 240),
-  );
   late final AnimationController _shake = AnimationController(
     vsync: this,
     duration: const Duration(milliseconds: 420),
   );
   late final AnimationController _hintPulse = AnimationController(
     vsync: this,
-    duration: const Duration(milliseconds: 700),
+    duration: const Duration(milliseconds: 1800),
   );
+  late final AnimationController _breath = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 2200),
+  )..repeat(reverse: true);
 
+  /// Blocks input only during the collision shake; escapes never block, so
+  /// the player can chain taps while earlier snakes are still gliding out.
   bool _busy = false;
-  int? _slidingSnakeId;
-  Offset _slideBase = Offset.zero;
+
+  /// Snakes already removed from the board but still animating off-screen.
+  final Map<int, _Departure> _departures = {};
   Position? _collisionCell;
-  Position? _hintCell;
+  int? _collidingSnakeId;
+  int? _hintSnakeId;
+
+  /// Tracks the pinch-zoom level so the painter can restore snake details
+  /// once tiny cells become large enough on screen.
+  final TransformationController _viewer = TransformationController();
+  double _viewScale = 1.0;
 
   @override
   void initState() {
     super.initState();
+    _viewer.addListener(() {
+      final scale = _viewer.value.getMaxScaleOnAxis();
+      if ((scale - _viewScale).abs() > 0.08) {
+        setState(() => _viewScale = scale);
+      }
+    });
     // Riverpod 3 forbids mutating a provider during a widget life-cycle
     // (initState runs inside build). Defer the load until after the first frame.
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -76,9 +104,13 @@ class _GameScreenState extends ConsumerState<GameScreen>
 
   @override
   void dispose() {
-    _slide.dispose();
+    for (final departure in _departures.values) {
+      departure.controller.dispose();
+    }
     _shake.dispose();
     _hintPulse.dispose();
+    _breath.dispose();
+    _viewer.dispose();
     super.dispose();
   }
 
@@ -108,31 +140,44 @@ class _GameScreenState extends ConsumerState<GameScreen>
 
   void _runSlide(Board board, FireResult result) {
     final snake = result.firedSnake!;
-    final dist = _exitDistance(board, snake) + 0.6;
-    setState(() {
-      _busy = true;
-      _slidingSnakeId = snake.id;
-      _slideBase = Offset(
-        snake.direction.dCol * dist,
-        snake.direction.dRow * dist,
-      );
-    });
+    // Glide duration scales with the distance travelled (head-to-edge plus
+    // the body following through), so long escapes don't blur past.
+    final travelCells = _cellsToEdge(board, snake) + snake.length + 1;
+    final controller = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: (280 + 95 * travelCells).clamp(600, 1600)),
+    );
+
+    // Apply the move immediately: the board drops the snake now, so the next
+    // tap works while this one is still visually gliding out.
     unawaited(ref.read(soundControllerProvider).play(SoundEffect.escape));
-    _slide.forward(from: 0).whenComplete(() {
-      ref.read(gameProvider.notifier).applyResult(result);
-      setState(() {
-        _busy = false;
-        _slidingSnakeId = null;
-        _slideBase = Offset.zero;
-      });
-      _slide.reset();
+    ref.read(gameProvider.notifier).applyResult(result);
+    setState(() => _departures[snake.id] = _Departure(snake, controller));
+    controller.forward().whenComplete(() {
+      controller.dispose();
+      if (mounted) {
+        setState(() => _departures.remove(snake.id));
+      } else {
+        _departures.remove(snake.id);
+      }
     });
+  }
+
+  int _cellsToEdge(Board board, Snake snake) {
+    final h = snake.head;
+    return switch (snake.direction) {
+      Direction.right => board.width - h.col,
+      Direction.left => h.col + 1,
+      Direction.down => board.height - h.row,
+      Direction.up => h.row + 1,
+    };
   }
 
   void _runCollision(FireResult result) {
     setState(() {
       _busy = true;
       _collisionCell = result.collisionAt;
+      _collidingSnakeId = result.firedSnake?.id;
     });
     unawaited(ref.read(soundControllerProvider).play(SoundEffect.hiss));
     _shake.forward(from: 0).whenComplete(() {
@@ -140,6 +185,7 @@ class _GameScreenState extends ConsumerState<GameScreen>
       setState(() {
         _busy = false;
         _collisionCell = null;
+        _collidingSnakeId = null;
       });
       _shake.reset();
     });
@@ -147,21 +193,14 @@ class _GameScreenState extends ConsumerState<GameScreen>
 
   void _showHint() {
     if (_busy) return;
-    final pos = ref.read(gameProvider.notifier).hint();
-    if (pos == null) return;
-    setState(() => _hintCell = pos);
+    final id = ref.read(gameProvider.notifier).hintSnakeId();
+    if (id == null) return;
+    setState(() => _hintSnakeId = id);
     _hintPulse.forward(from: 0).whenComplete(() {
-      if (mounted) setState(() => _hintCell = null);
+      if (mounted) setState(() => _hintSnakeId = null);
       _hintPulse.reset();
     });
   }
-
-  double _exitDistance(Board board, Snake snake) => switch (snake.direction) {
-        Direction.right => (board.width - snake.head.col).toDouble(),
-        Direction.left => (snake.head.col + 1).toDouble(),
-        Direction.down => (board.height - snake.head.row).toDouble(),
-        Direction.up => (snake.head.row + 1).toDouble(),
-      };
 
   void _maybeShowInterstitial() {
     final wins = ref.read(sessionWinsProvider.notifier).increment();
@@ -181,15 +220,14 @@ class _GameScreenState extends ConsumerState<GameScreen>
   }
 
   void _nextLevel() {
-    final nextSeed = widget.seed + 1;
-    if (nextSeed > levelsPerDifficulty) {
+    final current = widget.level;
+    if (current == null || current >= totalLevels) {
       Navigator.of(context).pop();
       return;
     }
     Navigator.of(context).pushReplacement(
       MaterialPageRoute<void>(
-        builder: (_) =>
-            GameScreen(seed: nextSeed, difficulty: widget.difficulty),
+        builder: (_) => GameScreen.forLevel(current + 1),
       ),
     );
   }
@@ -223,12 +261,24 @@ class _GameScreenState extends ConsumerState<GameScreen>
       }
     });
 
-    final canUndo = state.moves > 0 && state.isPlaying;
-
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          widget.isDaily ? l10n.dailyChallenge : l10n.levelLabel(widget.seed),
+        title: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              widget.isDaily
+                  ? l10n.dailyChallenge
+                  : l10n.levelLabel(widget.level ?? widget.seed),
+            ),
+            Text(
+              _difficultyLabel(l10n, widget.difficulty),
+              style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                    color: _difficultyColor(widget.difficulty),
+                    fontWeight: FontWeight.w600,
+                  ),
+            ),
+          ],
         ),
         centerTitle: true,
       ),
@@ -237,23 +287,28 @@ class _GameScreenState extends ConsumerState<GameScreen>
           children: [
             _StatusBar(state: state),
             Expanded(
-              child: Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: AspectRatio(
-                    aspectRatio: 1,
-                    child: LayoutBuilder(
-                      builder: (context, constraints) =>
-                          _buildBoard(state, constraints.biggest),
+              // Pinch to zoom into dense boards (taps map correctly through
+              // the transform, so tiny snakes become easy to hit), drag with
+              // one finger to pan while zoomed.
+              child: InteractiveViewer(
+                transformationController: _viewer,
+                maxScale: 4.0,
+                child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: AspectRatio(
+                      aspectRatio: 1,
+                      child: LayoutBuilder(
+                        builder: (context, constraints) =>
+                            _buildBoard(state, constraints.biggest),
+                      ),
                     ),
                   ),
                 ),
               ),
             ),
             _ActionBar(
-              canUndo: canUndo,
               canHint: state.isPlaying && !_busy,
-              onUndo: () => ref.read(gameProvider.notifier).undo(),
               onHint: _showHint,
               onRestart: () => ref.read(gameProvider.notifier).reset(),
             ),
@@ -266,11 +321,20 @@ class _GameScreenState extends ConsumerState<GameScreen>
 
   Widget _buildBoard(GameState state, Size size) {
     return AnimatedBuilder(
-      animation: Listenable.merge([_slide, _shake, _hintPulse]),
+      animation: Listenable.merge([
+        _shake,
+        _hintPulse,
+        _breath,
+        for (final departure in _departures.values) departure.controller,
+      ]),
       builder: (context, _) {
-        final slideT = Curves.easeIn.transform(_slide.value);
         final shakeDx =
             math.sin(_shake.value * math.pi * 5) * 10 * (1 - _shake.value);
+        // Idle breath: stroke width ±3%. Frozen on huge boards — repainting
+        // hundreds of snakes every frame just to breathe is wasted work.
+        final breathScale = state.board.snakeCount > 80
+            ? 1.0
+            : 1.0 + 0.03 * math.sin(_breath.value * math.pi);
 
         final painter = BoardPainter(
           board: state.board,
@@ -279,13 +343,26 @@ class _GameScreenState extends ConsumerState<GameScreen>
           headAccent: AppPalette.amber,
           collisionColor: AppPalette.rose,
           hintColor: AppPalette.amber,
-          slidingSnakeId: _slidingSnakeId,
-          slideTranslation: _slideBase * slideT,
-          slidingOpacity: 1 - slideT,
+          // Gentle sine easing: each snake gathers speed and glides out
+          // without the abrupt mid-animation rush of a cubic curve.
+          departing: [
+            for (final departure in _departures.values)
+              DepartingSnake(
+                departure.snake,
+                Curves.easeInOutSine.transform(departure.controller.value),
+              ),
+          ],
           collisionCell: _collisionCell,
-          collisionFlash: _collisionCell == null ? 0.0 : math.sin(_shake.value * math.pi),
-          hintCell: _hintCell,
-          hintFlash: _hintCell == null ? 0.0 : math.sin(_hintPulse.value * math.pi),
+          collidingSnakeId: _collidingSnakeId,
+          collisionFlash:
+              _collisionCell == null ? 0.0 : math.sin(_shake.value * math.pi),
+          hintSnakeId: _hintSnakeId,
+          // Three soft pulses over the hint window.
+          hintFlash: _hintSnakeId == null
+              ? 0.0
+              : math.sin(_hintPulse.value * math.pi * 3).abs(),
+          breathScale: breathScale,
+          viewScale: _viewScale,
         );
 
         return Transform.translate(
@@ -296,7 +373,7 @@ class _GameScreenState extends ConsumerState<GameScreen>
               fit: StackFit.expand,
               children: [
                 CustomPaint(painter: painter),
-                if (!state.isPlaying)
+                if (!state.isPlaying && _departures.isEmpty)
                   _ResultOverlay(
                     status: state.status,
                     onRestart: () => ref.read(gameProvider.notifier).reset(),
@@ -313,6 +390,30 @@ class _GameScreenState extends ConsumerState<GameScreen>
     );
   }
 }
+
+/// A snake gliding off-board with its own animation controller, so several
+/// escapes can run at once.
+class _Departure {
+  const _Departure(this.snake, this.controller);
+
+  final Snake snake;
+  final AnimationController controller;
+}
+
+String _difficultyLabel(AppLocalizations l10n, Difficulty difficulty) =>
+    switch (difficulty) {
+      Difficulty.easy => l10n.difficultyEasy,
+      Difficulty.medium => l10n.difficultyMedium,
+      Difficulty.hard => l10n.difficultyHard,
+      Difficulty.veryHard => l10n.difficultyVeryHard,
+    };
+
+Color _difficultyColor(Difficulty difficulty) => switch (difficulty) {
+      Difficulty.easy => AppPalette.teal,
+      Difficulty.medium => AppPalette.amber,
+      Difficulty.hard => AppPalette.rose,
+      Difficulty.veryHard => const Color(0xFFB388FF),
+    };
 
 class _StatusBar extends StatelessWidget {
   const _StatusBar({required this.state});
@@ -374,16 +475,12 @@ class _StatusBar extends StatelessWidget {
 
 class _ActionBar extends StatelessWidget {
   const _ActionBar({
-    required this.canUndo,
     required this.canHint,
-    required this.onUndo,
     required this.onHint,
     required this.onRestart,
   });
 
-  final bool canUndo;
   final bool canHint;
-  final VoidCallback onUndo;
   final VoidCallback onHint;
   final VoidCallback onRestart;
 
@@ -393,11 +490,6 @@ class _ActionBar extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        _ActionButton(
-          icon: Icons.undo,
-          label: l10n.undo,
-          onPressed: canUndo ? onUndo : null,
-        ),
         _ActionButton(
           icon: Icons.lightbulb_outline,
           label: l10n.hint,

@@ -108,15 +108,22 @@ void main() {
       expect(container.read(gameProvider).moves, 0);
     });
 
-    test('hint always returns a currently-escaping snake head', () {
+    Position headOf(ProviderContainer container, int id) => container
+        .read(gameProvider)
+        .board
+        .snakes
+        .firstWhere((s) => s.id == id)
+        .head;
+
+    test('hint always returns a currently-escaping snake', () {
       final container = makeContainer();
       final notifier = container.read(gameProvider.notifier);
 
       final steps = notifier.solution.length ~/ 2;
       for (var i = 0; i < steps; i++) {
-        final hint = notifier.hint();
-        expect(hint, isNotNull);
-        expect(notifier.peek(hint!).didEscape, isTrue,
+        final id = notifier.hintSnakeId();
+        expect(id, isNotNull);
+        expect(notifier.peek(headOf(container, id!)).didEscape, isTrue,
             reason: 'hint must be a safe move');
         notifier.applyResult(notifier.peek(notifier.solution[i]));
       }
@@ -128,7 +135,7 @@ void main() {
       for (final pos in notifier.solution) {
         notifier.applyResult(notifier.peek(pos));
       }
-      expect(notifier.hint(), isNull);
+      expect(notifier.hintSnakeId(), isNull);
     });
 
     test('consecutive escapes build a combo', () {
@@ -136,7 +143,8 @@ void main() {
       final notifier = container.read(gameProvider.notifier);
 
       for (var i = 0; i < 3; i++) {
-        notifier.applyResult(notifier.peek(notifier.hint()!));
+        final id = notifier.hintSnakeId()!;
+        notifier.applyResult(notifier.peek(headOf(container, id)));
       }
       final state = container.read(gameProvider);
       expect(state.combo, 3);
@@ -156,7 +164,8 @@ void main() {
           container.read(gameProvider).maxLives - 1);
 
       for (var i = 0; i < GameNotifier.comboRewardThreshold; i++) {
-        notifier.applyResult(notifier.peek(notifier.hint()!));
+        final id = notifier.hintSnakeId()!;
+        notifier.applyResult(notifier.peek(headOf(container, id)));
       }
       final state = container.read(gameProvider);
       expect(state.combo, GameNotifier.comboRewardThreshold);
