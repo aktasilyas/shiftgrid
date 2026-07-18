@@ -118,3 +118,21 @@ stand-in; lisanslı tıslama BACKLOG).
 **Gerekçe:** Tek hücreli aynı boyutta oklar oyunu fazla kolaylaştırıyordu; iç içe değişken
 uzunluk zorluk ve özgün kimlik sağlar. Yılan görseli Legal Gate (§6) için referanstan uzaklaşır.
 Çözülebilirlik invariantı (ters-üretim + property test) korunur.
+
+## 0015 — Nokta ızgarası + slither görsel dili
+**Tarih:** 2026-07-17
+**Karar:** Tahta arka planı dolu kare tile değil **seyrek nokta ızgarası**; yılanlar sürekli
+stroke (Catmull-Rom yumuşatma, uzunluğa oranlı adım bütçesi) + kama/baş + amber gözlerle
+çizilir. Idle "nefes" (`breathScale` ±%3) tüm yılanlarda aynı fazda.
+**Gerekçe:** Referans oyunun lavanta polyline trade dress'inden uzak, özgün slither dili.
+Kare tile'lar tahtayı kalabalık ve "ok ızgarası" gibi gösteriyordu; nokta ızgara gövde
+kıvrımlarını öne çıkarır. Performans: tek CustomPainter, step bütçesi uzunlukla ölçeklenir.
+
+## 0016 — Prosedürel SFX + yoğunluk revizyonu
+**Tarih:** 2026-07-18
+**Karar:** SystemSound stand-in kaldırıldı; `assets/audio/{tap,slither,hiss,win}.wav`
+(in-house procedural, CC0) + `AudioPool` (lowLatency). Çarpışma=`hiss`, kaçış başlangıcı=
+`slither`. Zorluk profilleri sıkılaştırıldı (easy 6×6 / medium 8×8 / hard 10×10; daha uzun
+gövde, daha düşük maxOpenRatio, maxAttempts=96).
+**Gerekçe:** TASKS_REVIZYON — gerçek tıslama/süzülme hissi + referansa yakın iç içelik.
+İlerleme anahtarı seed indeksi olduğu için profil değişimi kayıtlı ilerlemeyi bozmaz.
