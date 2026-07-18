@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'core/audio/sound_controller.dart';
 import 'core/di/providers.dart';
 import 'core/l10n/app_localizations.dart';
 import 'core/settings/settings_notifier.dart';
@@ -48,6 +49,7 @@ class _ShiftGridAppState extends ConsumerState<ShiftGridApp> {
   Future<void> _initServices() async {
     if (kIsWeb || !(Platform.isAndroid || Platform.isIOS)) return;
     try {
+      await ref.read(soundControllerProvider).init();
       await ref.read(adServiceProvider).initialize();
       await ref.read(purchaseServiceProvider).initialize();
     } catch (e) {
