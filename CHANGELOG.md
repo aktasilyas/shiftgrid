@@ -1,8 +1,33 @@
 # Changelog
 
-All notable changes to ShiftGrid are documented here.
+All notable changes to Snake Shift (formerly ShiftGrid) are documented here.
 Format loosely follows [Keep a Changelog](https://keepachangelog.com/);
 versioning is `marketingVersion+buildNumber` (pubspec `version:`).
+
+## [1.1.0+2] — 2026-07-18
+
+Rebrand to **Snake Shift** + the "real snakes" overhaul.
+
+### Changed
+- Naturalistic snake rendering: tapered bodies with rounded bends, dorsal
+  blotches, viper-shaped heads (amber slit-pupil eyes, nostrils, flicking
+  forked tongue). Heads always face the actual slide direction.
+- Slides are slower and serpentine — duration scales with travel distance,
+  and the body follows a fixed wavy track like a real slither.
+- Difficulty is now decided by the game, not the player: one 120-level
+  ladder — levels 1–5 easy, then medium / hard / very hard mixed in a fixed
+  deterministic pattern. Difficulty label shown under the level title.
+- Denser boards: medium 9×9/13 snakes, hard 13×13/26 snakes.
+- New **Very Hard** difficulty: 36×36 grid with ~160–190 interlocked snakes.
+- Escapes apply instantly: tap the next snake while the previous one is
+  still gliding out (each departure animates independently).
+- Hint now highlights a whole currently-escapable snake (glow pulse) instead
+  of flashing a cell; Undo button removed.
+- Collided snakes flush red for the shake duration.
+- Pinch-to-zoom (up to 4×) with pan; snake detail level adapts to the
+  on-screen cell size so zooming restores full detail on dense boards.
+- New snake launcher icon + splash; app renamed to **Snake Shift**
+  (package id unchanged: `com.aktasilyas.shiftgrid`).
 
 ## [1.0.0+1] — 2026-07-17
 
