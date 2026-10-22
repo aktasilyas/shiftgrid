@@ -1,7 +1,7 @@
 name: shiftgrid
-description: "Grid-based minimalist arrow puzzle (Android-first)."
+description: "Snake Shift — release the snakes, clear the grid (Android-first)."
 publish_to: 'none'
-version: 1.0.0+1
+version: 1.1.0+2
 
 environment:
   sdk: ^3.10.4
@@ -34,6 +34,8 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   generate: true
+  assets:
+    - assets/audio/
 
 flutter_launcher_icons:
   android: true

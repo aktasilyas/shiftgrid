@@ -1,4 +1,4 @@
-package com.aktasilyas.shiftgrid
+package com.aktasilyas.snakeshift
 
 import io.flutter.embedding.android.FlutterActivity
 

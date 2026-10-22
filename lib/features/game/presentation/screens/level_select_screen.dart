@@ -1,29 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/constants/game_constants.dart';
 import '../../../../core/di/providers.dart';
 import '../../../../core/l10n/app_localizations.dart';
 import '../../../../core/theme/app_palette.dart';
-import '../../domain/entities/difficulty.dart';
-import '../widgets/difficulty_label.dart';
+import '../../domain/usecases/level_progression.dart';
 import 'game_screen.dart';
 
+/// One continuous ladder of levels; difficulty ramps automatically.
 class LevelSelectScreen extends ConsumerStatefulWidget {
-  const LevelSelectScreen({required this.difficulty, super.key});
-
-  final Difficulty difficulty;
+  const LevelSelectScreen({super.key});
 
   @override
   ConsumerState<LevelSelectScreen> createState() => _LevelSelectScreenState();
 }
 
 class _LevelSelectScreenState extends ConsumerState<LevelSelectScreen> {
-  Future<void> _openLevel(int seed) async {
+  Future<void> _openLevel(int level) async {
     await Navigator.of(context).push(
-      MaterialPageRoute<void>(
-        builder: (_) => GameScreen(seed: seed, difficulty: widget.difficulty),
-      ),
+      MaterialPageRoute<void>(builder: (_) => GameScreen.forLevel(level)),
     );
     if (mounted) setState(() {}); // refresh progress after returning
   }
@@ -33,8 +28,13 @@ class _LevelSelectScreenState extends ConsumerState<LevelSelectScreen> {
     final l10n = AppLocalizations.of(context);
     final progress = ref.watch(progressRepositoryProvider);
 
+    bool completed(int level) => progress.isCompleted(
+          difficultyForLevel(level),
+          seedForLevel(level),
+        );
+
     return Scaffold(
-      appBar: AppBar(title: Text(difficultyLabel(l10n, widget.difficulty))),
+      appBar: AppBar(title: Text(l10n.levels)),
       body: SafeArea(
         child: GridView.builder(
           padding: const EdgeInsets.all(16),
@@ -43,19 +43,20 @@ class _LevelSelectScreenState extends ConsumerState<LevelSelectScreen> {
             mainAxisSpacing: 12,
             crossAxisSpacing: 12,
           ),
-          itemCount: levelsPerDifficulty,
+          itemCount: totalLevels,
           itemBuilder: (context, index) {
-            final seed = index + 1;
-            final unlocked = progress.isUnlocked(widget.difficulty, seed);
-            final completed = progress.isCompleted(widget.difficulty, seed);
-            final best = progress.bestMoves(widget.difficulty, seed);
+            final level = index + 1;
+            final unlocked = level == 1 || completed(level - 1);
 
             return _LevelTile(
-              seed: seed,
+              seed: level,
               unlocked: unlocked,
-              completed: completed,
-              bestMoves: best,
-              onTap: unlocked ? () => _openLevel(seed) : null,
+              completed: completed(level),
+              bestMoves: progress.bestMoves(
+                difficultyForLevel(level),
+                seedForLevel(level),
+              ),
+              onTap: unlocked ? () => _openLevel(level) : null,
             );
           },
         ),
@@ -96,26 +97,36 @@ class _LevelTile extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         child: Padding(
           padding: const EdgeInsets.all(8),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              if (!unlocked)
-                const Icon(Icons.lock, color: AppPalette.textMuted, size: 22)
-              else ...[
-                Text(
-                  '$seed',
-                  style: theme.textTheme.titleLarge?.copyWith(color: foreground),
-                ),
-                if (completed && bestMoves != null)
+          // Scale the tile content down instead of overflowing on narrow
+          // phone tiles.
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (!unlocked)
+                  const Icon(Icons.lock, color: AppPalette.textMuted, size: 22)
+                else ...[
                   Text(
-                    l10n.bestMovesLabel(bestMoves!),
-                    style: theme.textTheme.labelSmall
-                        ?.copyWith(color: AppPalette.textMuted),
+                    '$seed',
+                    style:
+                        theme.textTheme.titleLarge?.copyWith(color: foreground),
+                  ),
+                  if (completed && bestMoves != null)
+                    Text(
+                      l10n.bestMovesLabel(bestMoves!),
+                      style: theme.textTheme.labelSmall
+                          ?.copyWith(color: AppPalette.textMuted),
+                    ),
+                ],
+                if (completed)
+                  const Icon(
+                    Icons.check_circle,
+                    color: AppPalette.teal,
+                    size: 16,
                   ),
               ],
-              if (completed)
-                const Icon(Icons.check_circle, color: AppPalette.teal, size: 16),
-            ],
+            ),
           ),
         ),
       ),

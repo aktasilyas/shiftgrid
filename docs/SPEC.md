@@ -34,8 +34,8 @@ Yerleştirme sırasının tersi = garanti çözüm. Yılan kaldırmak yolu yaln�
 ## 5. Zorluk profilleri (özet)
 | | size | snakes | length | maxOpenRatio |
 |---|---|---|---|---|
-| Easy | 5 | 5 | 2–4 | 0.55 |
-| Medium | 6 | 7 | 2–6 | 0.45 |
-| Hard | 7 | 9 | 3–8 | 0.40 |
+| Easy | 6 | 6 | 2–5 | 0.50 |
+| Medium | 8 | 11 | 3–8 | 0.40 |
+| Hard | 10 | 16 | 3–12 | 0.32 |
 
-Bkz. `DifficultyProfile` ve DECISIONS #0014.
+Bkz. `DifficultyProfile` ve DECISIONS #0014 / #0016.

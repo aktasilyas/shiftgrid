@@ -12,6 +12,12 @@ void main() {
   const generator = LevelGenerator();
   const seedCount = 1000;
 
+  // veryHard boards are ~10× the cell count of hard (~400ms each to
+  // generate); a smaller sample keeps the suite usable while the
+  // reverse-generation invariant is board-size independent.
+  int seedsFor(Difficulty difficulty) =>
+      difficulty == Difficulty.veryHard ? 40 : seedCount;
+
   void playAndExpectCleared(GeneratedLevel level) {
     Board board = level.board;
     for (final pos in level.solution) {
@@ -32,8 +38,9 @@ void main() {
   }
 
   for (final difficulty in Difficulty.values) {
-    test('$seedCount seeds are all solvable — ${difficulty.name}', () {
-      for (var seed = 0; seed < seedCount; seed++) {
+    test('${seedsFor(difficulty)} seeds are all solvable — ${difficulty.name}',
+        () {
+      for (var seed = 0; seed < seedsFor(difficulty); seed++) {
         final level = generator.generate(seed: seed, difficulty: difficulty);
         playAndExpectCleared(level);
       }
@@ -73,5 +80,22 @@ void main() {
       }
     }
     expect(sawLong, isTrue, reason: 'expected at least one longer snake');
+  });
+
+  test('medium/hard average occupancy meets density targets', () {
+    double avgOccupancy(Difficulty d) {
+      var sum = 0.0;
+      const samples = 40;
+      for (var seed = 0; seed < samples; seed++) {
+        final level = generator.generate(seed: seed, difficulty: d);
+        final cells = level.board.width * level.board.height;
+        sum += level.board.occupiedCellCount / cells;
+      }
+      return sum / samples;
+    }
+
+    // Soft floors — generator may place fewer snakes when candidates run out.
+    expect(avgOccupancy(Difficulty.medium), greaterThan(0.55));
+    expect(avgOccupancy(Difficulty.hard), greaterThan(0.60));
   });
 }

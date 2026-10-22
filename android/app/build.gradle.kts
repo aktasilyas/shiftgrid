@@ -19,7 +19,7 @@ if (hasKeystore) {
 }
 
 android {
-    namespace = "com.aktasilyas.shiftgrid"
+    namespace = "com.aktasilyas.snakeshift"
     // Target Android 16 (API 36) to satisfy the 31 Aug 2026 Play requirement.
     compileSdk = 36
     ndkVersion = flutter.ndkVersion
@@ -34,7 +34,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.aktasilyas.shiftgrid"
+        applicationId = "com.aktasilyas.snakeshift"
         minSdk = 24
         targetSdk = 36
         versionCode = flutter.versionCode

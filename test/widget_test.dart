@@ -21,6 +21,6 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('ShiftGrid'), findsOneWidget);
+    expect(find.text('Snake Shift'), findsOneWidget);
   });
 }

@@ -2,7 +2,7 @@
     <!-- In-app billing (in_app_purchase). -->
     <uses-permission android:name="com.android.vending.BILLING" />
     <application
-        android:label="shiftgrid"
+        android:label="Snake Shift"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <!-- AdMob application id. NOTE: Google TEST app id — replace before store submission. -->

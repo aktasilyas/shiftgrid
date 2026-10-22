@@ -1,6 +1,6 @@
 # RELEASE — Yayına hazırlık (GATE 3)
 
-Uygulama: **ShiftGrid** · Paket: `com.aktasilyas.shiftgrid` · Sürüm: `1.0.0+1`
+Uygulama: **Snake Shift** · Paket: `com.aktasilyas.snakeshift` · Sürüm: `1.1.0+2`
 
 ## 1. Build
 
@@ -36,36 +36,41 @@ flutter build appbundle --release \
 ## 4. Store listing metinleri
 
 ### English
-- **Title (≤30):** ShiftGrid
+- **Title (≤30):** Snake Shift
 - **Short description (≤80):** Release the snakes — clear the grid in this logic puzzle.
 - **Full description:**
-  > ShiftGrid is a clean, minimalist logic puzzle. Every level is a tangle of snakes —
-  > tap one to let it glide out, but only if its path is clear. Plan your order, chain
-  > escapes to build a combo and win back lives, and clear the whole board.
+  > Snake Shift is a clean, minimalist logic puzzle. Every level is a tangle of
+  > lifelike snakes — tap one to let it slither out, but only if its path is clear.
+  > Plan your order, chain escapes to build a combo and win back lives, and clear
+  > the whole board.
   >
-  > • 120 handcrafted-by-seed levels across Easy, Medium and Hard
+  > • 120 levels that ramp up on their own — from a gentle start to Very Hard
+  >   boards packed with hundreds of interlocked snakes
+  > • Pinch to zoom into the densest grids
   > • A fresh Daily Challenge with a day-streak to keep
   > • Chain-combo mechanic: consecutive escapes refund lives
-  > • Undo and a smart hint that never leads to a dead end
+  > • A smart hint that never leads to a dead end
   > • Distraction-free dark theme, Turkish & English
   >
-  > No timers, no clutter — just you and the grid.
+  > No timers, no clutter — just you and the snakes.
 
 ### Türkçe
-- **Başlık (≤30):** ShiftGrid
+- **Başlık (≤30):** Snake Shift
 - **Kısa açıklama (≤80):** Yılanları serbest bırak, ızgarayı temizle — mantık bulmacası.
 - **Tam açıklama:**
-  > ShiftGrid sade, minimalist bir mantık bulmacasıdır. Her bölüm iç içe yılanlarla doludur —
-  > yolu açıksa dokunup süzülerek çıksın. Sıranı planla, ardışık çıkışlarla kombo yap ve
-  > can kazan, tüm tahtayı temizle.
+  > Snake Shift sade, minimalist bir mantık bulmacasıdır. Her bölüm iç içe
+  > gerçekçi yılanlarla doludur — yolu açıksa dokunup süzülerek çıksın. Sıranı
+  > planla, ardışık çıkışlarla kombo yap ve can kazan, tüm tahtayı temizle.
   >
-  > • Kolay/Orta/Zor'da 120 bölüm
+  > • Kendiliğinden zorlaşan 120 bölüm — yumuşak bir başlangıçtan, yüzlerce iç
+  >   içe yılanla dolu Çok Zor tahtalara
+  > • En yoğun ızgaralara iki parmakla yakınlaş
   > • Her gün yeni Günlük Görev + gün-serisi
   > • Zincir-kombo: ardışık çıkışlar can iade eder
-  > • Geri al ve asla çıkmaza sokmayan akıllı ipucu
+  > • Asla çıkmaza sokmayan akıllı ipucu
   > • Dikkat dağıtmayan koyu tema, Türkçe & İngilizce
   >
-  > Sayaç yok, karmaşa yok — sadece sen ve ızgara.
+  > Sayaç yok, karmaşa yok — sadece sen ve yılanlar.
 
 ## 5. ASO anahtar kelimeler
 - **EN:** puzzle, logic puzzle, brain, snake, grid, minimalist, offline, daily puzzle, casual
@@ -96,7 +101,7 @@ Play: telefon için en az 2 (min 320px), 16:9 veya 9:16. Öneri: 1080×1920.
 - Beklenen: **PEGI 3 / Everyone**.
 
 ## 9. Play Console tıkla-geç adımları (kullanıcı yapar)
-1. Play Console → **Create app** (ad: ShiftGrid, kategori: Oyun > Bulmaca, ücretsiz).
+1. Play Console → **Create app** (ad: Snake Shift, kategori: Oyun > Bulmaca, ücretsiz).
 2. **App integrity → Play App Signing** etkinleştir.
 3. **Store listing:** §4 metinleri, ikon (512×512), feature graphic (1024×500), §6 ekran görüntüleri.
 4. **Privacy policy URL** (§3) gir.

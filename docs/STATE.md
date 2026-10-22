@@ -6,7 +6,7 @@
 |---|---|
 | Faz | 7+ — Snake mekaniği (çekirdek yeniden konumlandırma) |
 | Durum | feat/snake-mechanics: çok hücreli yılan + property test yeşil |
-| Kod adı | ShiftGrid (paket: `com.aktasilyas.shiftgrid`) |
+| Kod adı | ShiftGrid (paket: `com.aktasilyas.snakeshift`) |
 | Son commit | (snake PR bekliyor) |
 | Aktif branch | `feat/snake-mechanics` |
 

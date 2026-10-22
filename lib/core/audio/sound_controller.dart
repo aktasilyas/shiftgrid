@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -5,35 +8,67 @@ import '../settings/settings_notifier.dart';
 
 enum SoundEffect { tap, escape, hiss, win }
 
-/// Lightweight feedback controller.
+/// Low-latency SFX via [AudioPool] (in-house procedural WAVs).
 ///
-/// Uses the platform's built-in click sound + haptics so we ship no
-/// third-party audio assets (Legal Gate §6). Licensed hiss SFX via
-/// audioplayers is tracked in docs/BACKLOG.md.
+/// See DECISIONS #0016. Haptics remain as secondary feedback.
 class SoundController {
-  const SoundController({required this.enabled});
+  SoundController({required this.isEnabled});
 
-  final bool enabled;
+  final bool Function() isEnabled;
+  final Map<SoundEffect, AudioPool> _pools = {};
+  bool _ready = false;
+
+  static const _files = {
+    SoundEffect.tap: 'audio/tap.wav',
+    SoundEffect.escape: 'audio/slither.wav',
+    SoundEffect.hiss: 'audio/hiss.wav',
+    SoundEffect.win: 'audio/win.wav',
+  };
+
+  Future<void> init() async {
+    if (_ready) return;
+    for (final e in SoundEffect.values) {
+      _pools[e] = await AudioPool.createFromAsset(
+        path: _files[e]!,
+        maxPlayers: e == SoundEffect.tap ? 3 : 2,
+        playerMode: PlayerMode.lowLatency,
+      );
+    }
+    _ready = true;
+  }
 
   Future<void> play(SoundEffect effect) async {
-    if (!enabled) return;
+    if (!isEnabled()) return;
+    if (_ready) {
+      await _pools[effect]?.start();
+    }
     switch (effect) {
       case SoundEffect.tap:
         await HapticFeedback.selectionClick();
       case SoundEffect.escape:
-        await SystemSound.play(SystemSoundType.click);
         await HapticFeedback.lightImpact();
       case SoundEffect.hiss:
-        // Stand-in for a real hiss until licensed SFX ships.
-        await SystemSound.play(SystemSoundType.alert);
         await HapticFeedback.heavyImpact();
       case SoundEffect.win:
         await HapticFeedback.mediumImpact();
     }
   }
+
+  Future<void> dispose() async {
+    for (final p in _pools.values) {
+      await p.dispose();
+    }
+    _pools.clear();
+    _ready = false;
+  }
 }
 
 final soundControllerProvider = Provider<SoundController>((ref) {
-  final settings = ref.watch(settingsProvider);
-  return SoundController(enabled: settings.soundEnabled);
+  final controller = SoundController(
+    isEnabled: () => ref.read(settingsProvider).soundEnabled,
+  );
+  ref.onDispose(() {
+    unawaited(controller.dispose());
+  });
+  return controller;
 });

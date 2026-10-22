@@ -9,7 +9,7 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get appTitle => 'ShiftGrid';
+  String get appTitle => 'Snake Shift';
 
   @override
   String get play => 'Play';
@@ -48,6 +48,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get chooseDifficulty => 'Choose a difficulty';
 
   @override
+  String get levels => 'Levels';
+
+  @override
   String get difficultyEasy => 'Easy';
 
   @override
@@ -55,6 +58,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get difficultyHard => 'Hard';
+
+  @override
+  String get difficultyVeryHard => 'Very Hard';
 
   @override
   String get undo => 'Undo';

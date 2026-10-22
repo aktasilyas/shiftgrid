@@ -1,9 +1,12 @@
+import 'dart:math';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../domain/entities/difficulty.dart';
 import '../../domain/entities/generated_level.dart';
 import '../../domain/entities/position.dart';
 import '../../domain/usecases/level_generator.dart';
+import '../../domain/usecases/ray_escapes.dart';
 import '../../domain/usecases/try_fire.dart';
 import 'game_state.dart';
 
@@ -34,18 +37,18 @@ class GameNotifier extends Notifier<GameState> {
 
   FireResult peek(Position position) => tryFire(state.board, position);
 
-  /// A guaranteed-safe next move: the snake with the highest placement id that
-  /// remains always has a clear shot (see the reverse-generation invariant).
-  Position? hint() {
-    Position? best;
-    var bestId = -1;
-    for (final snake in state.board.snakes) {
-      if (snake.id > bestId) {
-        bestId = snake.id;
-        best = snake.head;
-      }
-    }
-    return best;
+  /// A snake that can escape right now, chosen at random for variety.
+  ///
+  /// The reverse-generation invariant guarantees at least one open snake
+  /// exists while the board is uncleared, so this only returns null when
+  /// the board is empty.
+  int? hintSnakeId() {
+    final open = [
+      for (final snake in state.board.snakes)
+        if (rayEscapes(state.board, snake)) snake.id,
+    ];
+    if (open.isEmpty) return null;
+    return open[Random().nextInt(open.length)];
   }
 
   void applyResult(FireResult result) {
